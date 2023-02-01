@@ -90,7 +90,7 @@ bool rgb_matrix_indicators_advanced_vinorodrigues(uint8_t led_min, uint8_t led_m
 
     #ifdef LED_COLOR_ALPHA_CAPS
     // caps-lock indicators
-    if (host_keyboard_led_state().caps_lock) {
+    if (host_keyboard_led_state().caps_lock || test_caps_lock_indicator()) {
         __rgb_matrix_set_all_color_by_flag(led_min, led_max, LED_FLAG_ALPHA_KEY, LED_COLOR_ALPHA_CAPS);
         led_sngltn.caps_led = true;
     } else if (led_sngltn.caps_led) {

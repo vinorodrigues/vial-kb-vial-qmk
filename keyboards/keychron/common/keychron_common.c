@@ -234,11 +234,24 @@ static void __rgb_matrix_set_color_w(int index) {
 }
 #endif  // CAPS_LOCK_LED_COLOR | NUM_LOCK_LED_COLOR | SCROLL_LOCK_LED_COLOR
 
+#ifdef CAPS_LOCK_LED_INDEX
+__attribute__((weak)) bool test_caps_lock_indicator(void) { return false; };
+#endif  // CAPS_LOCK_LED_INDEX
+
+#ifdef NUM_LOCK_LED_INDEX
+__attribute__((weak)) bool test_num_lock_indicator(void) { return false; };
+#endif  // NUM_LOCK_LED_INDEX
+
+#ifdef SCROLL_LOCK_LED_INDEX
+__attribute__((weak)) bool test_scroll_lock_indicator(void) { return false; };
+#endif  // SCROLL_LOCK_LED_INDEX
+
+
 void rgb_matrix_indicators_keychron(void) {
     // this code executes when the matrix is enabled
 
     #ifdef CAPS_LOCK_LED_INDEX
-    if (host_keyboard_led_state().caps_lock) {
+    if (host_keyboard_led_state().caps_lock || test_caps_lock_indicator()) {
         #ifdef CAPS_LOCK_LED_COLOR
         __rgb_matrix_set_color_b(CAPS_LOCK_LED_INDEX, caps_lock_led_color.r, caps_lock_led_color.g, caps_lock_led_color.b);
         #else
@@ -248,7 +261,7 @@ void rgb_matrix_indicators_keychron(void) {
     #endif  // CAPS_LOCK_LED_INDEX
 
     #ifdef NUM_LOCK_LED_INDEX
-    if (host_keyboard_led_state().num_lock) {
+    if (host_keyboard_led_state().num_lock || test_num_lock_indicator()) {
         #ifdef NUM_LOCK_LED_COLOR
         __rgb_matrix_set_color_b(NUM_LOCK_LED_INDEX, num_lock_led_color.r, num_lock_led_color.g, num_lock_led_color.b);
         #else
@@ -258,7 +271,7 @@ void rgb_matrix_indicators_keychron(void) {
     #endif  // NUM_LOCK_LED_INDEX
 
     #ifdef SCROLL_LOCK_LED_INDEX
-    if (host_keyboard_led_state().scroll_lock) {
+    if (host_keyboard_led_state().scroll_lock || test_scroll_lock_indicator()) {
         #ifdef SCROLL_LOCK_LED_COLOR
         __rgb_matrix_set_color_b(SCROLL_LOCK_LED_INDEX, scroll_lock_led_color.r, scroll_lock_led_color.g, scroll_lock_led_color.b);
         #else
@@ -289,7 +302,7 @@ bool led_update_keychron(led_t led_state) {
     // this code executes when the matrix is NOT enabled
     if (res) {
         #ifdef CAPS_LOCK_LED_INDEX
-        if (led_state.caps_lock) {
+        if (led_state.caps_lock || test_caps_lock_indicator()) {
             #ifdef CAPS_LOCK_LED_COLOR
             __rgb_matrix_set_color_b(CAPS_LOCK_LED_INDEX, caps_lock_led_color.r, caps_lock_led_color.g, caps_lock_led_color.b);
             #else
@@ -301,7 +314,7 @@ bool led_update_keychron(led_t led_state) {
         #endif  // CAPS_LOCK_LED_INDEX
 
         #ifdef NUM_LOCK_LED_INDEX
-        if (led_state.num_lock) {
+        if (led_state.num_lock || test_num_lock_indicator()) {
             #ifdef NUM_LOCK_LED_COLOR
             __rgb_matrix_set_color_b(NUM_LOCK_LED_INDEX, num_lock_led_color.r, num_lock_led_color.g, num_lock_led_color.b);
             #else
@@ -313,7 +326,7 @@ bool led_update_keychron(led_t led_state) {
         #endif  // NUM_LOCK_LED_INDEX
 
         #ifdef SCROLL_LOCK_LED_INDEX
-        if (led_state.scroll_lock) {
+        if (led_state.scroll_lock || test_scroll_lock_indicator()) {
             #ifdef SCROLL_LOCK_LED_COLOR
             __rgb_matrix_set_color_b(SCROLL_LOCK_LED_INDEX, scroll_lock_led_color.r, scroll_lock_led_color.g, scroll_lock_led_color.b);
             #else

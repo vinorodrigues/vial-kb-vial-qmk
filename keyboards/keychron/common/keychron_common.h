@@ -56,6 +56,17 @@ bool rgb_matrix_indicators_advanced_keychron(uint8_t led_min, uint8_t led_max);
 #if defined(RGB_MATRIX_ENABLE) && ( defined(CAPS_LOCK_LED_INDEX) || \
     defined(NUM_LOCK_LED_INDEX) || defined(SCROLL_LOCK_LED_INDEX) )
 uint8_t light_brightness_get(void);
+
+#ifdef CAPS_LOCK_LED_INDEX
+bool test_caps_lock_indicator(void);
+#endif  // CAPS_LOCK_LED_INDEX
+#ifdef NUM_LOCK_LED_INDEX
+bool test_num_lock_indicator(void);
+#endif  // NUM_LOCK_LED_INDEX
+#ifdef SCROLL_LOCK_LED_INDEX
+bool test_scroll_lock_indicator(void);
+#endif  // SCROLL_LOCK_LED_INDEX
+
 void rgb_matrix_indicators_keychron(void);
 bool led_update_keychron(led_t led_state);
 #endif  // RGB_MATRIX_ENABLE & CAPS_LOCK_LED_INDEX | NUM_LOCK_LED_INDEX | SCROLL_LOCK_LED_INDEX
