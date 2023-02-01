@@ -3,12 +3,10 @@
 
 #pragma once
 
-/* Pin connected to DS of 74HC595 */
-#define DATA_PIN_74HC595 A7
-/* Pin connected to SH_CP of 74HC595 */
-#define CLOCK_PIN_74HC595 B1
-/* Pin connected to ST_CP of 74HC595 */
-#define LATCH_PIN_74HC595 B0
+/* Keychron matrix.c */
+#define DATA_PIN_74HC595 A7  // Pin connected to DS of 74HC595
+#define CLOCK_PIN_74HC595 B1  // Pin connected to SH_CP of 74HC595
+#define LATCH_PIN_74HC595 B0  // Pin connected to ST_CP of 74HC595
 
 /* DIP switch */
 #define DIP_SWITCH_MATRIX_GRID  { {5,4} }
@@ -27,10 +25,6 @@
 #define DRIVER_2_LED_TOTAL 37
 #define RGB_MATRIX_LED_COUNT (DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL)  // new, Dec '22
 #define DRIVER_LED_TOTAL (RGB_MATRIX_LED_COUNT)  // legacy
-
-/* EEPROM Driver Configuration */
-#define WEAR_LEVELING_LOGICAL_SIZE 2048
-#define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
 
 /* Encoder Configuration */
 #define ENCODER_DEFAULT_POS 0x3

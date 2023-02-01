@@ -28,4 +28,4 @@ bool led_update_kb(led_t led_state) {
     return led_update_keychron(led_state);
 }
 
-#endif // CAPS_LOCK_LED_INDEX
+#endif // RGB_MATRIX_ENABLE

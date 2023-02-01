@@ -56,7 +56,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [WIN_BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
     [WIN_FN]   = { ENCODER_CCW_CW(RGB_VAD, RGB_VAI)}
 };
-#endif // ENCODER_MAP_ENABLE
+#endif  // ENCODER_MAP_ENABLE
 
 // clang-format on
 
@@ -71,17 +71,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+#ifdef DIP_SWITCH_ENABLE
 bool dip_switch_update_user(uint8_t index, bool active) {
     if (!dip_switch_update_keychron(index, active)) {
         return false;
     }
     return true;
 }
+#endif  // DIP_SWITCH_ENABLE
 
 #ifdef RGB_MATRIX_ENABLE
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if(!rgb_matrix_indicators_advanced_keychron(led_min, led_max)) {
         return;
     }
+    // return true;
 }
-#endif // RGB_MATRIX_ENABLE
+#endif  // RGB_MATRIX_ENABLE

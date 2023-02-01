@@ -78,9 +78,9 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
 // clang-format on
 
 
-/* ------------
- * LED OVERRIDE
- * ------------ */
+/* --------------
+ * LED Indicators
+ * -------------- */
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -108,6 +108,7 @@ bool led_update_user(led_t led_state) {
 }
 
 #endif  // RGB_MATRIX_ENABLE
+
 
 /* ========================
  * KEYCHRON & VinoRodrigues
@@ -142,15 +143,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+#ifdef DIP_SWITCH_ENABLE
 bool dip_switch_update_user(uint8_t index, bool active) {
     if (!dip_switch_update_keychron(index, active)) {
         return false;
     }
     return true;
 }
+#endif  // DIP_SWITCH_ENABLE
 
 #ifdef RGB_MATRIX_ENABLE
-
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if(!rgb_matrix_indicators_advanced_keychron(led_min, led_max)) {
         return;
@@ -159,5 +161,4 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         return;
     }
 }
-
-#endif // RGB_MATRIX_ENABLE
+#endif  // RGB_MATRIX_ENABLE

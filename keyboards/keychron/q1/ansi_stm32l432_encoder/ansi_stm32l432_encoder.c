@@ -12,6 +12,8 @@ const matrix_row_t matrix_mask[] = {
     0b1111111111101111,
 };
 
+// clang-format off
+
 #ifdef RGB_MATRIX_ENABLE
 
 const ckled2001_led PROGMEM g_ckled2001_leds[RGB_MATRIX_LED_COUNT] = {
@@ -133,4 +135,4 @@ void keyboard_post_init_kb(void) {
     keyboard_post_init_user();
 }
 
-#endif
+#endif  // ENCODER_ENABLE

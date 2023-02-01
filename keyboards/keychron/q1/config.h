@@ -3,7 +3,7 @@
 
 #pragma once
 
-#ifdef STUPID
+#ifdef I2C_1MHZ_ENABLE
     /* Increase I2C speed to 1000 KHz */
     #define I2C1_TIMINGR_PRESC 0U
     #define I2C1_TIMINGR_SCLDEL 3U
@@ -17,17 +17,28 @@
 /* Disable DIP switch in matrix data */
 #define MATRIX_MASKED
 
+/* EEPROM Driver Configuration */
+#define WEAR_LEVELING_LOGICAL_SIZE 2048
+#define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
 
-// RGB Matrix Animation modes. Explicitly enabled
-// For full list of effects, see:
-// https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects
+// /* Enable receive custom command from host */
+// #ifndef VIA_ENABLED
+//     #define RAW_HID_CMD 0xAB
+// #endif  // VIA_ENABLED
 
+/* Tap-Hold Configuration */
+#define HOLD_ON_OTHER_KEY_PRESS
+
+/* RGB Matrix */
 #define RGB_DISABLE_WHEN_USB_SUSPENDED  // Disable RGB lighting when PC is in suspend
 #define RGB_TRIGGER_ON_KEYDOWN  // Triggers RGB keypress events on key down
 
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #define RGB_MATRIX_KEYPRESSES
 
+// RGB Matrix Animation modes. Explicitly enabled
+// For full list of effects, see:
+// https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects
 // #define ENABLE_RGB_MATRIX_ALPHAS_MODS
 // #define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
 // #define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
@@ -75,8 +86,3 @@
 // #define ENABLE_RGB_MATRIX_MULTISPLASH
 #define ENABLE_RGB_MATRIX_SOLID_SPLASH
 // #define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
-
-/* Enable receive custom command from host */
-// #define RAW_HID_CMD 0xAB
-
-#define HOLD_ON_OTHER_KEY_PRESS
