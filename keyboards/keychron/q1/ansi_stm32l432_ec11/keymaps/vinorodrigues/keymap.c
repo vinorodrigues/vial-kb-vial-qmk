@@ -5,6 +5,7 @@
 #include "keychron_common.h"
 #include "vinorodrigues_common.h"
 #include "caffeine.h"
+#include "dice.h"
 
 // clang-format off
 
@@ -39,8 +40,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_FN] = LAYOUT_ansi_82(
         _______, KC_BRID, KC_BRIU, KC_MCTL, KC_LPAD, RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, KC_SIRI,          RGB_TOG,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_ERAS,          KC_INS,
-        RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI, _______, _______, _______, _______, KC_NOSS, _______, _______, _______,          KC_HOME,
-        KC_CAPS, RGB_RMD, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD, _______, _______, _______, KC_DICE, _______, _______,          KC_PENT,          KC_END,
+        RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI, _______, _______, _______, _______, _______, _______, _______, _______,          KC_HOME,
+        KC_CAPS, RGB_RMD, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD, _______, _______, _______, KC_NOSS, KC_DICE, _______,          KC_PENT,          KC_END,
         _______,          _______, KC_EECL, _______, KC_VRSN, QK_BOOT, NK_TOGG, _______, _______, _______, _______,          _______, KC_PGUP,
         _______, _______, _______,                            _______,                            _______, _______, _______, KC_HOME, KC_PGDN, KC_END
     ),
@@ -57,8 +58,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [WIN_FN] = LAYOUT_ansi_82(
         _______, KC_BRID, KC_BRIU, KC_TASK, KC_FLXP, RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, KC_CRTN,          RGB_TOG,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_INS,
-        RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI, _______, _______, _______, _______, KC_NOSS, _______, _______, _______,          KC_HOME,
-        KC_CAPS, RGB_RMD, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD, _______, _______, _______, KC_DICE, _______, _______,          _______,          KC_END,
+        RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI, _______, _______, _______, _______, _______, _______, _______, _______,          KC_HOME,
+        KC_CAPS, RGB_RMD, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD, _______, _______, _______, KC_NOSS, KC_DICE, _______,          _______,          KC_END,
         _______,          _______, KC_EECL, _______, KC_VRSN, QK_BOOT, NK_TOGG, _______, _______, _______, _______,          _______, KC_PGUP,
         _______, _______, _______,                            _______,                            _______, _______, _______, KC_HOME, KC_PGDN, KC_END
     )
@@ -101,10 +102,13 @@ void keyboard_pre_init_user(void) {
 
 void rgb_matrix_indicators_user(void) {
     rgb_matrix_indicators_caffeine();
+    rgb_matrix_indicators_dice();
 }
 
 bool led_update_user(led_t led_state) {
-    return led_update_caffeine(led_state);
+    return
+        led_update_caffeine(led_state) &&
+        led_update_dice(led_state);
 }
 
 #endif  // RGB_MATRIX_ENABLE
@@ -117,6 +121,7 @@ bool led_update_user(led_t led_state) {
 void keyboard_post_init_user(void) {
     keyboard_post_init_vinorodrigues();
     keyboard_post_init_caffeine();
+    keyboard_post_init_dice();
 }
 
 void eeconfig_init_user(void) {
@@ -127,10 +132,13 @@ void eeconfig_init_user(void) {
 void housekeeping_task_user(void) {
     housekeeping_task_keychron();
     housekeeping_task_vinorodrigues();
+    // housekeeping_task_caffeine();
+    housekeeping_task_dice();
 }
 
 void matrix_scan_user(void) {
     matrix_scan_caffeine();
+    matrix_scan_dice();
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -139,6 +147,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     switch (keycode) {
         case KC_NO_SCREEN_SAVER: return caffeine_process_toggle_keycode(record);
+        case KC_ROLL_DICE: return dice_process_toggle_keycode(record);
         default: return true;
     }
 }
