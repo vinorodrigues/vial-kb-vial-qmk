@@ -17,6 +17,7 @@ SRC += keychron_common.c
 SRC += keychron_factory_test_common.c
 SRC += vinorodrigues_common.c
 SRC += caffeine.c
+SRC += dice.c
 OPT_DEFS += -DFACTORY_RESET_ENABLE
 
 DEBOUNCE_TYPE = sym_eager_pk

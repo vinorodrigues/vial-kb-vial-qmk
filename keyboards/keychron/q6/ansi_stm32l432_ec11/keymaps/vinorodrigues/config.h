@@ -45,6 +45,15 @@
 #define CAFFEINE_LED_INDEX 95  // Left Ctrl
 #define LED_COLOR_CAFFEINE RGB_PURPLE
 
+#define DICE_1_LED_INDEX 21
+#define DICE_2_LED_INDEX 22
+#define DICE_3_LED_INDEX 23
+#define DICE_4_LED_INDEX 24
+#define DICE_5_LED_INDEX 25
+#define DICE_6_LED_INDEX 26
+#define LED_COLOR_DICE RGB_TEAL
+
+
 // RGB Matrix Animation modes. Explicitly enabled
 // `////` = already in base `config.h`
 
