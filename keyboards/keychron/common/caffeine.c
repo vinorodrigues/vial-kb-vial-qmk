@@ -4,8 +4,8 @@
 #include QMK_KEYBOARD_H
 #include "caffeine.h"
 
-bool noss_on = false;             // No Screen Saver
-uint32_t timer_noss_buffer = 0;   // No Screen Saver timer buffer
+bool caffeine_on = false;             // No Screen Saver
+uint32_t timer_caffeine_buffer = 0;   // No Screen Saver timer buffer
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -34,11 +34,18 @@ uint32_t timer_blink_buffer = 0;  // Blink LED timer buffer
     #define CAFFEINE_KEY_CODE KC_RIGHT_CTRL
 #endif  // CAFFEINE_KEY_CODE
 
+void housekeeping_task_caffeine(void) {
+    // swithc off blinking if RGB has been toggled off
+    if (blink_on && !rgb_matrix_is_enabled()) {
+        blink_on = false;
+        rgb_matrix_set_color(CAFFEINE_LED_INDEX, RGB_OFF);
+    }
+}
 
 #ifdef RGB_MATRIX_ENABLE
 
 static void __caffeine_blink(void) {
-    if (noss_on) {
+    if (caffeine_on && rgb_matrix_is_enabled()) {
         if (sync_timer_elapsed32(timer_blink_buffer) > CAFFEINE_BLINK_DELAY) {  // every second
             timer_blink_buffer = sync_timer_read32();  // reset timer
             blink_on = !blink_on;
@@ -63,28 +70,35 @@ bool led_update_caffeine(led_t led_state) {
 #endif  // RGB_MATRIX_ENABLE
 
 void keyboard_post_init_caffeine(void) {
-    noss_on = false;
+    caffeine_on = false;
+    timer_caffeine_buffer = 0;
+    #ifdef RGB_MATRIX_ENABLE
     blink_on = false;
-    timer_noss_buffer = 0;
     timer_blink_buffer = 0;
+    #endif  // RGB_MATRIX_ENABLE
 }
 
 void matrix_scan_caffeine(void) {
-    if (noss_on) {
-        if (sync_timer_elapsed32(timer_noss_buffer) > CAFFEINE_KEY_DELAY) {  // 59 sec
-            timer_noss_buffer = sync_timer_read32();  // reset timer
+    if (caffeine_on) {
+        if (sync_timer_elapsed32(timer_caffeine_buffer) > CAFFEINE_KEY_DELAY) {  // 59 sec
+            timer_caffeine_buffer = sync_timer_read32();  // reset timer
             tap_code(CAFFEINE_KEY_CODE);
+            tap_code(KC_MS_RIGHT);
+            tap_code(KC_MS_LEFT);
         }
     }
 }
 
 bool caffeine_process_toggle_keycode(keyrecord_t *record) {
     if (record->event.pressed) {
-        noss_on = !noss_on;
-        if (noss_on) {
-            timer_noss_buffer = sync_timer_read32();
+        caffeine_on = !caffeine_on;
+        if (caffeine_on) {
+            tap_code(CAFFEINE_KEY_CODE);
+            timer_caffeine_buffer = sync_timer_read32();
         } else {
+            #ifdef RGB_MATRIX_ENABLE
             blink_on = false;
+            #endif  // RGB_MATRIX_ENABLE
         }
     }
     return false;

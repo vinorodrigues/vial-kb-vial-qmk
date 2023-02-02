@@ -3,6 +3,8 @@
 
 #pragma once
 
+void housekeeping_task_caffeine(void);
+
 #ifdef RGB_MATRIX_ENABLE
 void rgb_matrix_indicators_caffeine(void);
 bool led_update_caffeine(led_t led_state);
