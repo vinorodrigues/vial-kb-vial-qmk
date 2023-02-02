@@ -100,4 +100,4 @@ bool rgb_matrix_indicators_advanced_ft(uint8_t led_min, uint8_t led_max) {
     }
     return true;
 }
-#endif // RGB_MATRIX_ENABLE
+#endif  // RGB_MATRIX_ENABLE

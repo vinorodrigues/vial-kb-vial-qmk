@@ -20,8 +20,8 @@ enum vinorodrigues_custom_codes {
 #define KC_EECL KC_CLEAR_EEPROM
 #define KC_VRSN KC_VERSION
 
-#define KC_CAFFEINE_TOGGLE KC_NO_SCREEN_SAVER  // for `caffeine.c`
-#define KC_ROLL_THE_DICE KC_ROLL_DICE  // for `dice.c`
+// #define KC_CAFFEINE_TOGGLE KC_NO_SCREEN_SAVER  // for `caffeine.c`
+// #define KC_ROLL_THE_DICE KC_ROLL_DICE  // for `dice.c`
 
 #define LED_FLAG_ALPHA_KEY 0x10  // Alpha keys (for Caps Lock)
 #define LED_FLAG_LAYER_IND 0x20  // Layer indicator
