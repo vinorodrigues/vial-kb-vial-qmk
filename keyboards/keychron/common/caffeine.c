@@ -17,7 +17,7 @@ uint32_t timer_blink_buffer = 0;  // Blink LED timer buffer
     #endif  // CAFFEINE_LED_INDEX
 
     #ifndef LED_COLOR_CAFFEINE
-        #error "LED_COLOR_CAFFEINE should be defined"
+        #define LED_COLOR_CAFFEINE RGB_WHITE
     #endif  // LED_COLOR_CAFFEINE
 
     #ifndef CAFFEINE_BLINK_DELAY
