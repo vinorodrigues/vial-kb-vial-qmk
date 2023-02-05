@@ -12,7 +12,7 @@
         {"name": "Task",  "title": "Task View in windows",     "shortName": "KC_TASK"},
         {"name": "FlXp",  "title": "File Explorer in windows", "shortName": "KC_FLXP"},
         {"name": "Snap",  "title": "Screenshot in macOS",      "shortName": "KC_SNAP"},
-        {"name": "Crtn",  "title": "Cortana in windows",       "shortName": "KC_CRTN"}
+        {"name": "Crtn",  "title": "Cortana in windows",       "shortName": "KC_CRTA"}
     ],
     "layouts": {
         "keymap":[

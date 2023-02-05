@@ -17,15 +17,21 @@ bool dip_switch_update_kb(uint8_t index, bool active) {
 
 #if defined(RGB_MATRIX_ENABLE) && defined(CAPS_LOCK_LED_INDEX)
 
-__attribute__((weak)) void rgb_matrix_indicators_keychron(void) {}
+extern void rgb_matrix_update_pwm_buffers(void);
+
+__attribute__((weak)) bool rgb_matrix_indicators_keychron(void) { return true; }
 __attribute__((weak)) bool led_update_keychron(led_t led_state) { return true; }
 
-void rgb_matrix_indicators_kb(void) {
-    rgb_matrix_indicators_keychron();
+bool rgb_matrix_indicators_kb(void) {
+    if (!rgb_matrix_indicators_user()) return false;
+    return rgb_matrix_indicators_keychron();
 }
 
 bool led_update_kb(led_t led_state) {
-    return led_update_keychron(led_state);
+    if (!led_update_user(led_state)) return false;
+    if (!led_update_keychron(led_state)) return false;
+    rgb_matrix_update_pwm_buffers();
+    return true;
 }
 
 #endif // RGB_MATRIX_ENABLE
