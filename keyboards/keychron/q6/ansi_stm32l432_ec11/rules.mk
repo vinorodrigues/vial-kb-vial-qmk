@@ -3,6 +3,7 @@
 
 # *** most settings now in `info.json` ***
 
+# Build Options
 EEPROM_DRIVER = wear_leveling
 WEAR_LEVELING_DRIVER = embedded_flash
 
@@ -12,5 +13,5 @@ OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 # custom matrix setup
 CUSTOM_MATRIX = lite
 
-VPATH += keyboards/keychron/common
+VPATH ?= keyboards/keychron/common
 SRC += matrix.c

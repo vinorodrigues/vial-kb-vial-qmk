@@ -4,7 +4,7 @@
 #pragma once
 
 /* Vial */
-#define VIAL_KEYBOARD_UID {0x0D, 0x74, 0x8A, 0xA6, 0x30, 0x70, 0x69, 0x69}  // copied from @adophoxia
+#define VIAL_KEYBOARD_UID {0x99, 0xB7, 0xD1, 0xF5, 0x63, 0x7B, 0xA9, 0x04}
 // Unlock with Esc + Enter
 #define VIAL_UNLOCK_COMBO_ROWS { 0, 3 }
 #define VIAL_UNLOCK_COMBO_COLS { 0, 13 }
@@ -14,6 +14,7 @@
     #undef DYNAMIC_KEYMAP_LAYER_COUNT
 #endif
 #define DYNAMIC_KEYMAP_LAYER_COUNT 5
+#define WIN_FN_LAYER 4  // used in factory reset
 
 /* Tap Code */
 #define TAPPING_TERM 250
@@ -89,6 +90,7 @@
 #undef ENABLE_RGB_MATRIX_PIXEL_RAIN	            // Enables RGB_MATRIX_PIXEL_RAIN
 
 /* RGB_MATRIX_FRAMEBUFFER_EFFECTS) */
+#undef RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #undef ENABLE_RGB_MATRIX_TYPING_HEATMAP
 #undef ENABLE_RGB_MATRIX_DIGITAL_RAIN
 

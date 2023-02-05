@@ -4,18 +4,18 @@ A customizable 100% keyboard.
 
 * Keyboard Maintainer: [Keychron](https://github.com/keychron)
 * Hardware Supported: Keychron Q6
-* Hardware Availability: [Keychron](https://keychron.com?search=Q6)
+* Hardware Availability: [Keychron](https://www.keychron.com?search=Q6)
 
 Make example for this keyboard (after setting up your build environment):
 
 ```bash
-make keychron/q6/q6_ansi_stm32l432:default
+make keychron/q6/ansi_stm32l432_ec11:default
 ```
 
 Flashing example for this keyboard:
 
 ```bash
-make keychron/q6/q6_ansi_stm32l432:flash
+make keychron/q6/ansi_stm32l432_ec11:flash
 ```
 
 **Reset Key**: Hold down the key located at *K00*, commonly programmed as *`Esc`* while plugging in the keyboard.

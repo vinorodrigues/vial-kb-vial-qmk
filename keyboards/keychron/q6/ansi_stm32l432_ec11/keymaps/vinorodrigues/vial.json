@@ -12,8 +12,8 @@
         {"name": "Task",  "title": "Task View in windows",     "shortName": "KC_TASK"},
         {"name": "FlXp",  "title": "File Explorer in windows", "shortName": "KC_FLXP"},
         {"name": "Snap",  "title": "Screenshot in macOS",      "shortName": "KC_SNAP"},
-        {"name": "Crtn",  "title": "Cortana in windows",       "shortName": "KC_CRTN"},
-        {"name": "NoSS",  "title": "Screen saver inhibitor",   "shortName": "KC_NOSS"},
+        {"name": "Crtn",  "title": "Cortana in windows",       "shortName": "KC_CRTA"},
+        {"name": "Caff",  "title": "Screen saver inhibitor",   "shortName": "KC_CAFF"},
         {"name": "Dice",  "title": "Roll the Dice",            "shortName": "KC_DICE"},
         {"name": "EECl",  "title": "Reset Keymap to Default",  "shortName": "KC_EECL"},
         {"name": "Vrsn",  "title": "Type Firmware Version",    "shortName": "KC_VRSN"}
