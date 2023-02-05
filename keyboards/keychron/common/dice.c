@@ -55,45 +55,6 @@ uint8_t roll_dice(void) {
     return (rand() % 6) + 1;
 }
 
-void housekeeping_task_dice(void) {
-    #ifdef RGB_MATRIX_ENABLE
-    if ((dice_rolling_on || dice_showing_on) && !rgb_matrix_is_enabled()) {
-        dice_rolling_on = false;
-        dice_showing_on = false;
-        dice_last = 0;
-        rgb_matrix_set_color(CAFFEINE_LED_INDEX, RGB_OFF);
-    }
-    #endif  // RGB_MATRIX_ENABLE
-}
-
-#ifdef RGB_MATRIX_ENABLE
-
-static void __dice_blink(void) {
-    if ((dice_rolling_on || dice_showing_on) && (dice_last > 0)) {
-        rgb_matrix_set_color(led_indices[dice_last - 1], LED_COLOR_DICE);
-    }
-}
-
-void rgb_matrix_indicators_dice(void) {
-    __dice_blink();
-}
-
-bool led_update_dice(led_t led_state) {
-    __dice_blink();
-    return true;
-}
-
-#endif  // RGB_MATRIX_ENABLE
-
-void keyboard_post_init_dice(void) {
-    dice_init = false;
-    #ifdef RGB_MATRIX_ENABLE
-    dice_rolling_on = false;
-    dice_showing_on = false;
-    #endif  // RGB_MATRIX_ENABLE
-    dice_last = 0;
-}
-
 void matrix_scan_dice(void) {
     #ifdef RGB_MATRIX_ENABLE
 
@@ -113,6 +74,46 @@ void matrix_scan_dice(void) {
     }
 
     #endif  // RGB_MATRIX_ENABLE
+}
+
+void housekeeping_task_dice(void) {
+    #ifdef RGB_MATRIX_ENABLE
+    if ((dice_rolling_on || dice_showing_on) && !rgb_matrix_is_enabled()) {
+        dice_rolling_on = false;
+        dice_showing_on = false;
+        dice_last = 0;
+        rgb_matrix_set_color(CAFFEINE_LED_INDEX, RGB_OFF);
+    }
+    #endif  // RGB_MATRIX_ENABLE
+}
+
+#ifdef RGB_MATRIX_ENABLE
+
+static void __dice_blink(void) {
+    if ((dice_rolling_on || dice_showing_on) && (dice_last > 0)) {
+        rgb_matrix_set_color(led_indices[dice_last - 1], LED_COLOR_DICE);
+    }
+}
+
+bool rgb_matrix_indicators_dice(void) {
+    __dice_blink();
+    return true;
+}
+
+bool led_update_dice(led_t led_state) {
+    __dice_blink();
+    return true;
+}
+
+#endif  // RGB_MATRIX_ENABLE
+
+void keyboard_post_init_dice(void) {
+    dice_init = false;
+    #ifdef RGB_MATRIX_ENABLE
+    dice_rolling_on = false;
+    dice_showing_on = false;
+    #endif  // RGB_MATRIX_ENABLE
+    dice_last = 0;
 }
 
 bool dice_process_toggle_keycode(keyrecord_t *record) {

@@ -24,8 +24,7 @@ extern void rgb_matrix_update_pwm_buffers(void);
 
 #endif  // RGB_MATRIX_ENABLE
 
-void housekeeping_task_vinorodrigues(void) {
-}
+void housekeeping_task_vinorodrigues(void) { }
 
 bool process_record_vinorodrigues(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -41,7 +40,7 @@ bool process_record_vinorodrigues(uint16_t keycode, keyrecord_t *record) {
                 soft_reset_keyboard();
                 default_layer_set(default_layer_tmp);
 
-                wait_ms(100);  // give it time
+                wait_ms(10);  // give it time
 
                 return false;
             } else {
@@ -90,7 +89,7 @@ bool rgb_matrix_indicators_advanced_vinorodrigues(uint8_t led_min, uint8_t led_m
 
     #ifdef LED_COLOR_ALPHA_CAPS
     // caps-lock indicators
-    if (host_keyboard_led_state().caps_lock || test_caps_lock_indicator()) {
+    if (host_keyboard_led_state().caps_lock) {
         __rgb_matrix_set_all_color_by_flag(led_min, led_max, LED_FLAG_ALPHA_KEY, LED_COLOR_ALPHA_CAPS);
         led_sngltn.caps_led = true;
     } else if (led_sngltn.caps_led) {
@@ -154,6 +153,6 @@ void keyboard_post_init_vinorodrigues(void) {
     #endif  // RGB_MATRIX_ENABLE
 }
 
-void eeconfig_init_vinorodrigues(void) {
-    // EEPROM is getting reset!
-}
+// void eeconfig_init_vinorodrigues(void) {
+//     // EEPROM is getting reset!
+// }

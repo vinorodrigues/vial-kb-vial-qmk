@@ -34,6 +34,17 @@ uint32_t timer_blink_buffer = 0;  // Blink LED timer buffer
     #define CAFFEINE_KEY_CODE KC_RIGHT_CTRL
 #endif  // CAFFEINE_KEY_CODE
 
+void matrix_scan_caffeine(void) {
+    if (caffeine_on) {
+        if (sync_timer_elapsed32(timer_caffeine_buffer) > CAFFEINE_KEY_DELAY) {  // 59 sec
+            timer_caffeine_buffer = sync_timer_read32();  // reset timer
+            tap_code(CAFFEINE_KEY_CODE);
+            tap_code(KC_MS_RIGHT);
+            tap_code(KC_MS_LEFT);
+        }
+    }
+}
+
 void housekeeping_task_caffeine(void) {
     // swithc off blinking if RGB has been toggled off
     if (blink_on && !rgb_matrix_is_enabled()) {
@@ -58,8 +69,9 @@ static void __caffeine_blink(void) {
     }
 }
 
-void rgb_matrix_indicators_caffeine(void) {
+bool rgb_matrix_indicators_caffeine(void) {
     __caffeine_blink();
+    return true;
 }
 
 bool led_update_caffeine(led_t led_state) {
@@ -76,17 +88,6 @@ void keyboard_post_init_caffeine(void) {
     blink_on = false;
     timer_blink_buffer = 0;
     #endif  // RGB_MATRIX_ENABLE
-}
-
-void matrix_scan_caffeine(void) {
-    if (caffeine_on) {
-        if (sync_timer_elapsed32(timer_caffeine_buffer) > CAFFEINE_KEY_DELAY) {  // 59 sec
-            timer_caffeine_buffer = sync_timer_read32();  // reset timer
-            tap_code(CAFFEINE_KEY_CODE);
-            tap_code(KC_MS_RIGHT);
-            tap_code(KC_MS_LEFT);
-        }
-    }
 }
 
 bool caffeine_process_toggle_keycode(keyrecord_t *record) {
