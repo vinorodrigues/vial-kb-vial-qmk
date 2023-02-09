@@ -5,7 +5,7 @@
 
 // #define KEYBOARD_keychron_q1_ansi_stm32l432_ec11
 
-/* Keychron matrix.c */
+/* keychron_matrix.c */
 #define DATA_PIN_74HC595 A7  // Pin connected to DS of 74HC595
 #define CLOCK_PIN_74HC595 B1  // Pin connected to SH_CP of 74HC595
 #define LATCH_PIN_74HC595 B0  // Pin connected to ST_CP of 74HC595
