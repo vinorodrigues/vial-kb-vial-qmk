@@ -10,7 +10,7 @@ EEPROM_DRIVER = i2c
 OPT_DEFS += -DEXTERNAL_EEPROM_ENABLE
 OPT_DEFS += -DFACTORY_RESET_ENABLE
 
-DEBOUNCE_TYPE = sym_eager_pk
+DEBOUNCE_TYPE = asym_eager_defer_pk
 
 VPATH += keyboards/keychron/common
 # SRC += color_util.c

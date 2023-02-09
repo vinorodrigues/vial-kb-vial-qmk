@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_ERAS,          KC_INS,
         RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI, _______, _______, _______, _______, _______, _______, _______, _______,          KC_HOME,
         KC_CAPS, RGB_RMD, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD, _______, _______, _______, KC_CAFF, KC_DICE, _______,          KC_PENT,          KC_END,
-        _______,          _______, KC_EECL, _______, KC_VRSN, QK_BOOT, NK_TOGG, _______, _______, _______, _DEBUG_,          _______, KC_PGUP,
+        _______,          QK_BOOT, KC_EECL, _______, KC_VRSN, _______, NK_TOGG, _______, _______, _______, _DEBUG_,          _______, KC_PGUP,
         _______, _______, _______,                            _______,                            _______, _______, _______, KC_HOME, KC_PGDN, KC_END
     ),
 
@@ -66,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_INS,
         RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI, _______, _______, _______, _______, _______, _______, _______, _______,          KC_HOME,
         KC_CAPS, RGB_RMD, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD, _______, _______, _______, KC_CAFF, KC_DICE, _______,          _______,          KC_END,
-        _______,          _______, KC_EECL, _______, KC_VRSN, QK_BOOT, NK_TOGG, _______, _______, _______, _DEBUG_,          _______, KC_PGUP,
+        _______,          QK_BOOT, KC_EECL, _______, KC_VRSN, _______, NK_TOGG, _______, _______, _______, _DEBUG_,          _______, KC_PGUP,
         _______, _______, _______,                            _______,                            _______, _______, _______, KC_HOME, KC_PGDN, KC_END
     )
 };

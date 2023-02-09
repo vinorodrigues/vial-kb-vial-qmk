@@ -20,8 +20,8 @@
     #define I2C1_TIMINGR_SCLH 15U
     #define I2C1_TIMINGR_SCLL 51U
 #else
-    #define USB_POLLING_INTERVAL_MS 4  // all I need is 250Hz
-#endif  // STUPID
+    #define USB_POLLING_INTERVAL_MS 2  // all I need is 500Hz
+#endif  // I2C_1MHZ_ENABLE
 
 /* Scan phase of led driver set as MSKPHASE_9CHANNEL(defined as 0x03 in CKLED2001.h) */
 #define PHASE_CHANNEL MSKPHASE_9CHANNEL

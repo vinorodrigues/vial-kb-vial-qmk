@@ -15,6 +15,12 @@
 #define IGNORE_MOD_TAP_INTERRUPT
 #define TAP_CODE_DELAY 10
 
+// correct for over sensitive keys
+#ifdef DEBOUNCE
+    #undef DEBOUNCE
+#endif
+#define DEBOUNCE 10
+
 /* EEPROM Driver Configuration */
 #ifdef EXTERNAL_EEPROM_ENABLE
     #undef WEAR_LEVELING_LOGICAL_SIZE
