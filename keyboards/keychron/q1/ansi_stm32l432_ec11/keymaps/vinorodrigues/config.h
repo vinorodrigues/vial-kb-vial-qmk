@@ -35,6 +35,7 @@
 #endif
 
 /* used in `vinorodrigues_common.c` */
+#define KC_FIRST_USABLE_USERCODE (USER00 + 11)
 #define LED_COLOR_ALPHA_CAPS RGB_RED
 #define LED_COLOR_LAYER_1 RGB_BLUE
 #define LED_COLOR_LAYER_3 RGB_GREEN
