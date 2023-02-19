@@ -1,0 +1,7 @@
+{
+    "features": {
+        "rgblight": false,
+        "nkro": false
+    },
+    "rgblight": null
+}
