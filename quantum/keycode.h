@@ -510,7 +510,7 @@ enum internal_special_keycodes {
     KC_BRIGHTNESS_DOWN
 
 #ifdef APPLE_FN_ENABLE
-    , KC_APPLE_FN = 0xC1
+    , KC_APPLE_FN = 0xC3
 #endif
 };
 
