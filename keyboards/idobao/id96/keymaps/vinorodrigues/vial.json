@@ -2,13 +2,18 @@
     "lighting": "qmk_backlight",
     "matrix": {"rows": 12, "cols": 9},
     "customKeycodes": [
-        {"name": "MCtl",  "title": "Mission Control in macOS", "shortName": "KC_MCTL"},
-        {"name": "LPad",  "title": "Launch Pad in macOS",      "shortName": "KC_LPAD"},
-        {"name": "Siri",  "title": "Siri in macOS",            "shortName": "KC_SIRI"},
-        {"name": "Task",  "title": "Task View in windows",     "shortName": "KC_TASK"},
-        {"name": "FlXp",  "title": "File Explorer in windows", "shortName": "KC_FLXP"},
-        {"name": "Snap",  "title": "Screenshot in macOS",      "shortName": "KC_SNAP"},
-        {"name": "Crtn",  "title": "Cortana in windows",       "shortName": "KC_CRTA"}
+        {"name": "Task",      "title": "Task View in windows",               "shortName": "KC_TASK"},
+        {"name": "FlXp",      "title": "File Explorer in windows",           "shortName": "KC_FLXP"},
+        {"name": "Crtn",      "title": "Cortana in windows",                 "shortName": "KC_CRTA"},
+        {"name": "Appl\nFn",  "title": "Apple Fn Key",                       "shortName": "KC_APPL"},
+        {"name": "MCtl",      "title": "Mission Control in macOS",           "shortName": "KC_MCTL"},
+        {"name": "LPad",      "title": "Launch Pad in macOS",                "shortName": "KC_LPAD"},
+        {"name": "Siri",      "title": "Siri in macOS",                      "shortName": "KC_SIRI"},
+        {"name": "Snap",      "title": "Screenshot in macOS",                "shortName": "KC_SNAP"},
+        {"name": "Lock",      "title": "Lock and Sleep in macOS",            "shortName": "KC_LOCK"},
+        {"name": "Lock\n(D)", "title": "Lock and Sleep (Delayed) in macOS",  "shortName": "KC_LOCK"},
+        {"name": "EE\nClr",   "title": "EEPROM Clear",                       "shortName": "KC_EECL"},
+        {"name": "Ver?",      "title": "Print firmware version",             "shortName": "KC_VERS"}
     ],
     "layouts": {
         "keymap": [

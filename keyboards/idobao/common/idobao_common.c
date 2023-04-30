@@ -3,7 +3,14 @@
 
 #include QMK_KEYBOARD_H
 #include "idobao_common.h"
-// #include "host.h"
+#include "version.h"
+
+bool macos_lock_enabled = false;
+uint32_t timer_macos_lock_buffer = 0;
+
+#ifndef MACOS_LOCK_DELAY
+    #define MACOS_LOCK_DELAY (TAPPING_TERM + 1250)
+#endif  // MACOS_LOCK_DELAY
 
 #if defined(CAPS_LOCK_LED_COLOR) || defined(NUM_LOCK_LED_COLOR) || defined(SCROLL_LOCK_LED_COLOR)
     #include "color_util.h"
@@ -66,14 +73,14 @@ bool idobao_host_consumer_send(keyrecord_t *record, uint16_t data) {
     return false;  // Skip all further processing of this key
 }
 
-// bool idobao_register_code(keyrecord_t *record, uint16_t data) {
-//     if (record->event.pressed) {
-//         register_code(data);
-//     } else {
-//         unregister_code(data);
-//     }
-//     return false;  // Skip all further processing of this key
-// }
+bool idobao_register_code(keyrecord_t *record, uint16_t data) {
+    if (record->event.pressed) {
+        register_code(data);
+    } else {
+        unregister_code(data);
+    }
+    return false;  // Skip all further processing of this key
+}
 
 bool idobao_register_code_2(keyrecord_t *record, uint16_t data1, uint16_t data2) {
     if (record->event.pressed) {
@@ -99,22 +106,76 @@ bool idobao_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data2,
     return false;  // Skip all further processing of this key
 }
 
+static bool __print_version(keyrecord_t *record) {
+    if (!get_mods()) {
+        if (!record->event.pressed) {
+                SEND_STRING(QMK_KEYBOARD ":" QMK_KEYMAP " (v" QMK_VERSION ")");
+            }
+        }
+    return false;
+}
+
+static bool __eeprom_clear(keyrecord_t *record) {
+    if (record->event.pressed) {
+        eeconfig_init_quantum();
+        soft_reset_keyboard();
+        wait_ms(10);  // give it time
+    }
+    return false;
+}
+
+void __do_lock_and_sleep(void) {
+    send_string(SS_LCTL(SS_LGUI("q")) SS_DELAY(225) SS_TAP(X_ESC));
+}
+
+static bool __lock_and_sleep(keyrecord_t *record) {
+    if (record->event.pressed) {
+        __do_lock_and_sleep();
+    }
+    return false;
+}
+
+static bool __lock_and_sleep_delay(keyrecord_t *record) {
+    if (record->event.pressed) {
+        timer_macos_lock_buffer = sync_timer_read32();
+        macos_lock_enabled = true;
+    } else {
+        macos_lock_enabled = false;
+    }
+    return false;
+}
+
 void housekeeping_task_idobao(void) {
-    // do nothing
+    if (macos_lock_enabled && (sync_timer_elapsed32(timer_macos_lock_buffer) > MACOS_LOCK_DELAY)) {
+        macos_lock_enabled = false;
+        __do_lock_and_sleep();
+    }
 }
 
 bool process_record_idobao(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        // macOS
-        case KC_MISSION_CONTROL: return idobao_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS);
-        case KC_LAUNCHPAD: return idobao_host_consumer_send(record, _AC_SHOW_ALL_APPS);
-        case KC_SIRI: return idobao_register_code_2(record, KC_LOPT, KC_SPACE);
-        case KC_SCREEN_SHOT: return idobao_register_code_3(record, KC_LSFT, KC_LCMD, KC_4);
-
         // Windows
-        case KC_TASK_VIEW: return idobao_register_code_2(record, KC_LWIN, KC_TAB);
-        case KC_FILE_EXPLORER: return idobao_register_code_2(record, KC_LWIN, KC_E);
-        case KC_CORTANA: return idobao_register_code_2(record, KC_LWIN, KC_C);
+        case KC_TASK_VIEW:               return idobao_register_code_2(record, KC_LWIN, KC_TAB);
+        case KC_FILE_EXPLORER:           return idobao_register_code_2(record, KC_LWIN, KC_E);
+        case KC_CORTANA:                 return idobao_register_code_2(record, KC_LWIN, KC_C);
+
+        // macOS
+        #ifdef APPLE_FN_ENABLE
+        case MAGIC_TOGGLE_NKRO:
+        case KC_APPLE_FN_KEY:            return idobao_register_code(record, KC_APPLE_FN);
+        case MAGIC_HOST_NKRO:
+        case MAGIC_UNHOST_NKRO:          return false;  // discard these key
+        #endif  // APPLE_FN_ENABLE
+        case KC_MISSION_CONTROL:         return idobao_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS);
+        case KC_LAUNCHPAD:               return idobao_host_consumer_send(record, _AC_SHOW_ALL_APPS);
+        case KC_SIRI:                    return idobao_register_code_2(record, KC_LOPT, KC_SPACE);
+        case KC_SCREEN_SHOT:             return idobao_register_code_3(record, KC_LSFT, KC_LCMD, KC_4);
+        case KC_LOCK_AND_SLEEP:          return __lock_and_sleep(record);
+        case KC_LOCK_AND_SLEEP_DELAYED:  return __lock_and_sleep_delay(record);
+
+        // general
+        case KC_CLEAR_EEPROM:            return __eeprom_clear(record);
+        case KC_VERSION:                 return __print_version(record);
 
         default:
             return true;  // Process all other keycodes normally

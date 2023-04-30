@@ -12,13 +12,23 @@
 #endif
 
 enum keycron_custom_keycodes {
-    KC_MISSION_CONTROL = USER00,
+    // Windows
+    KC_TASK_VIEW = USER00,
+    KC_FILE_EXPLORER,
+    KC_CORTANA,
+
+    // macOS
+    KC_APPLE_FN_KEY,
+    KC_MISSION_CONTROL,
     KC_LAUNCHPAD,
     KC_SIRI,
-    KC_TASK_VIEW,
-    KC_FILE_EXPLORER,
     KC_SCREEN_SHOT,
-    KC_CORTANA
+    KC_LOCK_AND_SLEEP,
+    KC_LOCK_AND_SLEEP_DELAYED,
+
+    // General
+    KC_CLEAR_EEPROM,
+    KC_VERSION
 };
 
 enum macos_consumer_usages {
@@ -26,17 +36,24 @@ enum macos_consumer_usages {
     _AC_SHOW_ALL_APPS    = 0x2A0   // mapped to Q1_LPAD
 };
 
-#define KC_MCTL KC_MISSION_CONTROL
-#define KC_LPAD KC_LAUNCHPAD
 #define KC_TASK KC_TASK_VIEW
 #define KC_FLXP KC_FILE_EXPLORER
-#define KC_SNAP KC_SCREEN_SHOT
 #define KC_CRTA KC_CORTANA
+
+#define KC_APPL KC_APPLE_FN_KEY
+#define KC_MCTL KC_MISSION_CONTROL
+#define KC_LPAD KC_LAUNCHPAD
+#define KC_SNAP KC_SCREEN_SHOT
+#define KC_LOCK KC_LOCK_AND_SLEEP
+#define KC_LOKD KC_LOCK_AND_SLEEP_DELAYED
+
+#define KC_EECL KC_CLEAR_EEPROM
+#define KC_VERS KC_VERSION
 
 void keyboard_pre_init_kb(void);
 
 bool idobao_host_consumer_send(keyrecord_t *record, uint16_t data);
-// bool idobao_register_code(keyrecord_t *record, uint16_t data);
+bool idobao_register_code(keyrecord_t *record, uint16_t data);
 bool idobao_register_code_2(keyrecord_t *record, uint16_t data1, uint16_t data2);
 bool idobao_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data2, uint16_t data3);
 
