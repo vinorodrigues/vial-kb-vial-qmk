@@ -82,7 +82,9 @@ void housekeeping_task_dice(void) {
         dice_rolling_on = false;
         dice_showing_on = false;
         dice_last = 0;
-        rgb_matrix_set_color(CAFFEINE_LED_INDEX, RGB_OFF);
+        for (uint8_t i = 0; i < 6; i++) {
+            rgb_matrix_set_color(i, RGB_OFF);
+        }
     }
     #endif  // RGB_MATRIX_ENABLE
 }

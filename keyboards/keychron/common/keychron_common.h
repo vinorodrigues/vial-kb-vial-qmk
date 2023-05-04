@@ -1,20 +1,41 @@
 // Copyright 2022 Keychron (https://www.keychron.com)
+// Copyright 2022 Vino Rodrigues (@vinorodrigues)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #pragma once
 
 #include "stdint.h"
-#include "quantum_keycodes.h"
-#include "action.h"
-
-#ifndef VIA_ENABLE
-    #define USER00 (SAFE_RANGE)
+#ifdef VIA_ENABLE
+#    include "via.h"
 #endif
 
-enum keycron_custom_keycodes {
-    KC_MISSION_CONTROL = USER00,
+#ifdef VIAL_ENABLE
+enum {
+    QK_KB_0 = USER00,
+    QK_KB_1,
+    QK_KB_2,
+    QK_KB_3,
+    QK_KB_4,
+    QK_KB_5,
+    QK_KB_6,
+    QK_KB_7,
+    QK_KB_8,
+    QK_KB_9,
+    QK_KB_10,
+    QK_KB_11,
+    QK_KB_12,
+    QK_KB_13,
+    QK_KB_14,
+    QK_KB_15
+};
+#endif  // VIAL_ENABLE
+
+enum custom_keycodes {
+    #ifdef VIAL_ENABLE
+    KC_MISSION_CONTROL = QK_KB_0,
     KC_LAUNCHPAD,
-    KC_LOPTN,
+    #endif  // VIAL_ENABLE
+    KC_LOPTN = QK_KB_2,
     KC_ROPTN,
     KC_LCMMD,
     KC_RCMMD,
@@ -25,39 +46,39 @@ enum keycron_custom_keycodes {
     KC_CORTANA
 };
 
-enum macos_consumer_usages {
-    _AC_SHOW_ALL_WINDOWS = 0x29F,  // mapped to Q1_MCON
-    _AC_SHOW_ALL_APPS    = 0x2A0   // mapped to Q1_LPAD
-};
-
+#ifdef VIAL_ENABLE
 #define KC_MCTL KC_MISSION_CONTROL
 #define KC_LPAD KC_LAUNCHPAD
+#endif  // VIAL_ENABLE
 #define KC_TASK KC_TASK_VIEW
 #define KC_FLXP KC_FILE_EXPLORER
 #define KC_SNAP KC_SCREEN_SHOT
 #define KC_CRTA KC_CORTANA
 
-void keyboard_pre_init_kb(void);
+// typedef struct PACKED {
+//     uint8_t len;
+//     uint8_t keycode[3];
+// } key_combination_t;
 
-bool keychron_host_consumer_send(keyrecord_t *record, uint16_t data);
-bool keychron_register_code(keyrecord_t *record, uint16_t data);
-bool keychron_register_code_2(keyrecord_t *record, uint16_t data1, uint16_t data2);
-bool keychron_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data2, uint16_t data3);
+#ifdef VIAL_ENABLE
+enum macos_consumer_usages {
+    _AC_SHOW_ALL_WINDOWS = 0x29F,  // mapped to Q1_MCON
+    _AC_SHOW_ALL_APPS    = 0x2A0   // mapped to Q1_LPAD
+};
+#endif  // VIAL_ENABLE
+
+uint8_t light_brightness_get(void);
 
 void housekeeping_task_keychron(void);
 bool process_record_keychron(uint16_t keycode, keyrecord_t *record);
+void keyboard_post_init_keychron(void);
 
-bool dip_switch_update_keychron(uint8_t index, bool active);
+#ifdef LED_MATRIX_ENABLE
+bool led_matrix_indicators_advanced_ft(uint8_t led_min, uint8_t led_max);
+bool led_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max);
+#endif
 
 #ifdef RGB_MATRIX_ENABLE
-
-uint8_t light_brightness_get(void);
-bool rgb_matrix_indicators_advanced_keychron(uint8_t led_min, uint8_t led_max);
-
-#if defined(CAPS_LOCK_LED_INDEX) || defined(NUM_LOCK_LED_INDEX) || defined(SCROLL_LOCK_LED_INDEX)
-
-void rgb_matrix_indicators_keychron(void);
-bool led_update_keychron(led_t led_state);
-
-#endif  // CAPS_LOCK_LED_INDEX | NUM_LOCK_LED_INDEX | SCROLL_LOCK_LED_INDEX
-#endif  // RGB_MATRIX_ENABLE
+bool rgb_matrix_indicators_advanced_ft(uint8_t led_min, uint8_t led_max);
+bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max);
+#endif

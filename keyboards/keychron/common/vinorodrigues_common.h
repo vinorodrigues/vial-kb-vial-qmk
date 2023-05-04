@@ -6,23 +6,20 @@
 #include "action.h"
 #include "quantum_keycodes.h"
 
-#ifndef KC_FIRST_USABLE_USERCODE
-    #ifdef VIA_ENABLE
-        #define KC_FIRST_USABLE_USERCODE (USER00 + 15)
-    #else
-        #define KC_FIRST_USABLE_USERCODE (SAFE_RANGE + 15)
-    #endif 
-#endif  // KC_FIRST_USABLE_USERCODE
+#ifdef VIAL_ENABLE
+#define QK_KB_11 USER11
+#endif
 
 enum vinorodrigues_custom_codes {
-    KC_CAFFEINE_TOGGLE = KC_FIRST_USABLE_USERCODE,
-    KC_ROLL_DICE,
+    KC_APPLE_FN_KEY = QK_KB_11,
+    KC_LOCK_AND_SLEEP,
     KC_CLEAR_EEPROM,
     KC_VERSION
 };
 
-#define KC_CAFF KC_CAFFEINE_TOGGLE
-#define KC_DICE KC_ROLL_DICE
+#undef KC_APFN
+#define KC_APFN KC_APPLE_FN_KEY
+#define KC_LOCK KC_LOCK_AND_SLEEP
 #define KC_EECL KC_CLEAR_EEPROM
 #define KC_VRSN KC_VERSION
 
@@ -38,4 +35,3 @@ bool rgb_matrix_indicators_advanced_vinorodrigues(uint8_t led_min, uint8_t led_m
 #endif  // RGB_MATRIX_ENABLE
 
 void keyboard_post_init_vinorodrigues(void);
-// void eeconfig_init_vinorodrigues(void);

@@ -2,8 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include QMK_KEYBOARD_H
-#include "version.h"
 #include "vinorodrigues_common.h"
+#include "version.h"
+
+bool macos_lock_enabled = false;
+uint32_t timer_macos_lock_buffer = 0;
+
+#ifndef MACOS_LOCK_DELAY
+    #define MACOS_LOCK_DELAY (TAPPING_TERM + 1250)
+#endif  // MACOS_LOCK_DELAY
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -23,47 +30,95 @@ extern void rgb_matrix_update_pwm_buffers(void);
 
 #endif  // RGB_MATRIX_ENABLE
 
-void housekeeping_task_vinorodrigues(void) { }
+void __do_lock_and_sleep(void) {
+    send_string(SS_LCTL(SS_LGUI("q")) SS_DELAY(225) SS_TAP(X_ESC));
+}
+
+void housekeeping_task_vinorodrigues(void) {
+    if (macos_lock_enabled && (sync_timer_elapsed32(timer_macos_lock_buffer) > MACOS_LOCK_DELAY)) {
+        macos_lock_enabled = false;
+        __do_lock_and_sleep();
+    }
+}
+
+static bool __lock_and_sleep(keyrecord_t *record) {
+    if ((get_mods() & MOD_MASK_CSAG)) {
+        if (record->event.pressed) {
+            __do_lock_and_sleep();
+        }
+    } else {
+        if (record->event.pressed) {
+            timer_macos_lock_buffer = sync_timer_read32();
+            macos_lock_enabled = true;
+        } else {
+            macos_lock_enabled = false;
+            timer_macos_lock_buffer = 0;  // arb cleanup
+        }
+    }
+    return false;
+}
+
+static bool __eeprom_clear(keyrecord_t *record) {
+    if (record->event.pressed) {
+        rgb_matrix_set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, RGB_MATRIX_MAXIMUM_BRIGHTNESS, 0);  // All yellow
+        rgb_matrix_update_pwm_buffers();
+        wait_ms(10);  // give it time
+
+        layer_state_t default_layer_tmp = default_layer_state;
+        eeconfig_init_quantum();
+        soft_reset_keyboard();
+        default_layer_set(default_layer_tmp);
+
+        wait_ms(10);  // give it time
+    }
+    return false;
+}
+
+static bool __keyboard_boot(keyrecord_t *record) {
+    // does not really boot - just set's up the LED to show red
+    if (record->event.pressed) {
+        rgb_matrix_set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, 0, 0);  // All red
+        rgb_matrix_update_pwm_buffers();
+        wait_ms(10);  // give it time to change LED's
+    }
+    return true;  // NB! always TRUE = allow QMK to do it's thing
+}
+
+static bool __print_version(keyrecord_t *record) {
+    if (!get_mods()) {
+        if (!record->event.pressed) {
+            SEND_STRING(QMK_KEYBOARD ":" QMK_KEYMAP " (v" QMK_VERSION ") [E");
+            #ifdef EXTERNAL_EEPROM_ENABLE
+            SEND_STRING("EPROM");
+            #else
+            SEND_STRING("FL/WL");
+            #endif
+            SEND_STRING("]");
+        }
+    }
+    return false;
+}
 
 bool process_record_vinorodrigues(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
-        case KC_CLEAR_EEPROM:
+        #ifdef APPLE_FN_ENABLE
+        case MAGIC_TOGGLE_NKRO:
+        case KC_APPLE_FN_KEY:
             if (record->event.pressed) {
-                rgb_matrix_set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, RGB_MATRIX_MAXIMUM_BRIGHTNESS, 0);  // All yellow
-                rgb_matrix_update_pwm_buffers();
-                wait_ms(10);  // give it time
-
-                layer_state_t default_layer_tmp = default_layer_state;
-                eeconfig_init_quantum();
-                soft_reset_keyboard();
-                default_layer_set(default_layer_tmp);
-
-                wait_ms(10);  // give it time
+                register_code(KC_APPLE_FN);
+            } else {
+                unregister_code(KC_APPLE_FN);
             }
-            return false;
+            return false;  // Skip all further processing of this key
+        case MAGIC_HOST_NKRO:
+        case MAGIC_UNHOST_NKRO: return false;  // discard these keys
+        #endif  // APPLE_FN_ENABLE
 
-        case QK_BOOT:
-            if (record->event.pressed) {
-                rgb_matrix_set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, 0, 0);  // All red
-                rgb_matrix_update_pwm_buffers();
-                wait_ms(10);  // give it time to change LED's
-            }
-            return true;  // NB! always TRUE = allow QMK to do it's thing
-
-        case KC_VERSION:
-            if (!get_mods()) {
-                if (!record->event.pressed) {
-                    SEND_STRING(QMK_KEYBOARD ":" QMK_KEYMAP " (v" QMK_VERSION ") [E");
-                    #ifdef EEPROM_ENABLE
-                    SEND_STRING("EPROM");
-                    #else
-                    SEND_STRING("FL/WL");
-                    #endif
-                    SEND_STRING("]");
-                }
-            }
-            return false;
+        case KC_LOCK_AND_SLEEP: return __lock_and_sleep(record);
+        case KC_CLEAR_EEPROM: return __eeprom_clear(record);
+        case QK_BOOT: return __keyboard_boot(record);
+        case KC_VERSION: return __print_version(record);
 
         default:
             return true;
@@ -148,7 +203,3 @@ void keyboard_post_init_vinorodrigues(void) {
     led_sngltn.raw = 0;
     #endif  // RGB_MATRIX_ENABLE
 }
-
-// void eeconfig_init_vinorodrigues(void) {
-//     // EEPROM is getting reset!
-// }

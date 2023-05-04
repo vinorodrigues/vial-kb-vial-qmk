@@ -1,66 +1,35 @@
 // Copyright 2022 Keychron (https://www.keychron.com)
+// Copyright 2022 Vino Rodrigues (@vinorodrigues)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
 #include "keychron_common.h"
-#ifdef FACTORY_RESET_ENABLE
-    #include "keychron_factory_test_common.h"
-#endif  // FACTORY_RESET_ENABLE
-// #include "host.h"
 
-#if defined(CAPS_LOCK_LED_COLOR) || defined(NUM_LOCK_LED_COLOR) || defined(SCROLL_LOCK_LED_COLOR)
-    #include "color_util.h"
+// bool     is_siri_active = false;
+// uint32_t siri_timer     = 0;
+// // clang-format off
+// key_combination_t key_comb_list[4] = {
+//     {2, {KC_LWIN, KC_TAB}},
+//     {2, {KC_LWIN, KC_E}},
+//     {3, {KC_LSFT, KC_LCMD, KC_4}},
+//     {2, {KC_LWIN, KC_C}}
+// };
 
-    #if defined(CAPS_LOCK_LED_INDEX) && !defined(CAPS_LOCK_LED_COLOR)
-        #define CAPS_LOCK_LED_COLOR RGB_WHITE
-    #endif
+// static uint8_t mac_keycode[4] = {KC_LOPT, KC_ROPT, KC_LCMD, KC_RCMD};
+// // clang-format on
 
-    #if defined(NUM_LOCK_LED_INDEX) && !defined(NUM_LOCK_LED_COLOR)
-        #define NUM_LOCK_LED_COLOR RGB_WHITE
-    #endif
-
-    #if defined(SCROLL_LOCK_LED_INDEX) && !defined(SCROLL_LOCK_LED_COLOR)
-        #define SCROLL_LOCK_LED_COLOR RGB_WHITE
-    #endif
-#endif  // x_LOCK_LED_COLOR
-
-#ifdef CAPS_LOCK_LED_COLOR
-RGB caps_lock_led_color;
-#endif  // CAPS_LOCK_LED_COLOR
-
-#ifdef NUM_LOCK_LED_COLOR
-RGB num_lock_led_color;
-#endif  // NUM_LOCK_LED_COLOR
-
-#ifdef SCROLL_LOCK_LED_COLOR
-RGB scroll_lock_led_color;
-#endif  // SCROLL_LOCK_LED_COLOR
-
-
-#if defined(CAPS_LOCK_LED_COLOR) || defined(NUM_LOCK_LED_COLOR) || defined(SCROLL_LOCK_LED_COLOR)
-
-void keyboard_pre_init_kb(void) {
-    keyboard_pre_init_user();
-
-    #if defined(CAPS_LOCK_LED_COLOR) && defined(CAPS_LOCK_LED_INDEX)
-    caps_lock_led_color = to_rgb(CAPS_LOCK_LED_COLOR);
-    #endif  // CAPS_LOCK_LED_COLOR
-
-
-    #if defined(NUM_LOCK_LED_COLOR) && defined(NUM_LOCK_LED_INDEX)
-    num_lock_led_color = to_rgb(NUM_LOCK_LED_COLOR);
-    #endif  // NUM_LOCK_LED_COLOR
-
-
-    #if defined(SCROLL_LOCK_LED_COLOR) && defined(SCROLL_LOCK_LED_INDEX)
-    scroll_lock_led_color = to_rgb(SCROLL_LOCK_LED_COLOR);
-    #endif  // SCROLL_LOCK_LED_COLOR
+void housekeeping_task_keychron(void) {
+    // if (is_siri_active) {
+    //     if (sync_timer_elapsed32(siri_timer) >= 500) {
+    //         unregister_code(KC_LCMD);
+    //         unregister_code(KC_SPACE);
+    //         is_siri_active = false;
+    //     }
+    // }
 }
 
-#endif  // CAPS_LOCK_LED_COLOR | NUM_LOCK_LED_COLOR | SCROLL_LOCK_LED_COLOR
-
-
-bool keychron_host_consumer_send(keyrecord_t *record, uint16_t data) {
+#ifdef VIAL_ENABLE
+static bool keychron_host_consumer_send(keyrecord_t *record, uint16_t data) {
     if (record->event.pressed) {
         host_consumer_send(data);
     } else {
@@ -68,8 +37,9 @@ bool keychron_host_consumer_send(keyrecord_t *record, uint16_t data) {
     }
     return false;  // Skip all further processing of this key
 }
+#endif  // VIAL_ENABLE
 
-bool keychron_register_code(keyrecord_t *record, uint16_t data) {
+static bool keychron_register_code(keyrecord_t *record, uint16_t data) {
     if (record->event.pressed) {
         register_code(data);
     } else {
@@ -78,7 +48,7 @@ bool keychron_register_code(keyrecord_t *record, uint16_t data) {
     return false;  // Skip all further processing of this key
 }
 
-bool keychron_register_code_2(keyrecord_t *record, uint16_t data1, uint16_t data2) {
+static bool keychron_register_code_2(keyrecord_t *record, uint16_t data1, uint16_t data2) {
     if (record->event.pressed) {
         register_code(data1);
         register_code(data2);
@@ -89,7 +59,7 @@ bool keychron_register_code_2(keyrecord_t *record, uint16_t data1, uint16_t data
     return false;  // Skip all further processing of this key
 }
 
-bool keychron_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data2, uint16_t data3) {
+static bool keychron_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data2, uint16_t data3) {
     if (record->event.pressed) {
         register_code(data1);
         register_code(data2);
@@ -102,23 +72,18 @@ bool keychron_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data
     return false;  // Skip all further processing of this key
 }
 
-void housekeeping_task_keychron(void) {
-    #ifdef FACTORY_RESET_ENABLE
-    housekeeping_task_ft();
-    #endif
-}
-
 bool process_record_keychron(uint16_t keycode, keyrecord_t *record) {
-    #ifdef FACTORY_RESET_ENABLE
-    if (!process_record_ft(keycode, record)) {
-        return false;
-    }
-    #endif
-
     switch (keycode) {
+
         // macOS
+        #ifdef VIAL_ENABLE
         case KC_MISSION_CONTROL: return keychron_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS);
         case KC_LAUNCHPAD: return keychron_host_consumer_send(record, _AC_SHOW_ALL_APPS);
+        #else
+        case QK_KB_0: return keychron_register_code(KC_MISSION_CONTROL);
+        case QK_KB_1: return keychron_register_code(KC_LAUNCHPAD);
+        #endif  // VIAL_ENABLE
+
         case KC_LOPTN: return keychron_register_code(record, KC_LOPT);
         case KC_ROPTN: return keychron_register_code(record, KC_ROPT);
         case KC_LCMMD: return keychron_register_code(record, KC_LCMD);
@@ -132,161 +97,161 @@ bool process_record_keychron(uint16_t keycode, keyrecord_t *record) {
         case KC_CORTANA: return keychron_register_code_2(record, KC_LWIN, KC_C);
 
         default:
-            return true;  // Process all other keycodes normally
+            return true; // Process all other keycodes normally
     }
 }
 
-__attribute__((weak)) bool dip_switch_update_keychron(uint8_t index, bool active) { return true; }
+#if defined(RGB_MATRIX_ENABLE) && (defined(CAPS_LOCK_LED_INDEX) || defined(NUM_LOCK_LED_INDEX)) || defined(SCROLL_LOCK_LED_INDEX)
 
-#ifdef RGB_MATRIX_ENABLE
+#    define CAPS_NUM_LOCK_MAX_BRIGHTNESS 0xFF
+#    ifdef RGB_MATRIX_MAXIMUM_BRIGHTNESS
+#        undef CAPS_NUM_LOCK_MAX_BRIGHTNESS
+#        define CAPS_NUM_LOCK_MAX_BRIGHTNESS RGB_MATRIX_MAXIMUM_BRIGHTNESS
+#    endif
+
+#    define CAPS_NUM_LOCK_VAL_STEP 8
+#    ifdef RGB_MATRIX_VAL_STEP
+#        undef CAPS_NUM_LOCK_VAL_STEP
+#        define CAPS_NUM_LOCK_VAL_STEP RGB_MATRIX_VAL_STEP
+#    endif
 
 extern void rgb_matrix_update_pwm_buffers(void);
 
-#ifndef RGB_MATRIX_MAXIMUM_BRIGHTNESS
-    #define INDICATOR_MAX_BRIGHTNESS 0xFF
-#else
-    #define INDICATOR_MAX_BRIGHTNESS RGB_MATRIX_MAXIMUM_BRIGHTNESS
-#endif
-
-#ifndef RGB_MATRIX_VAL_STEP
-    #define INDICATOR_VAL_STEP 8
-#else
-    #define INDICATOR_VAL_STEP RGB_MATRIX_VAL_STEP
-#endif
-
 uint8_t light_brightness_get(void) {
     uint8_t value = rgb_matrix_get_val();
-    if (value < INDICATOR_VAL_STEP) {
-        value = INDICATOR_VAL_STEP;
-    } else if (value < (INDICATOR_MAX_BRIGHTNESS - INDICATOR_VAL_STEP)) {
-        value += INDICATOR_VAL_STEP; // one step more than current brightness
+    if (value < CAPS_NUM_LOCK_VAL_STEP) {
+        value = CAPS_NUM_LOCK_VAL_STEP;
+    } else if (value < (CAPS_NUM_LOCK_MAX_BRIGHTNESS - CAPS_NUM_LOCK_VAL_STEP)) {
+        value += CAPS_NUM_LOCK_VAL_STEP; // one step more than current brightness
     } else {
-        value = INDICATOR_MAX_BRIGHTNESS;
+        value = CAPS_NUM_LOCK_MAX_BRIGHTNESS;
     }
     return value;
 }
 
-bool rgb_matrix_indicators_advanced_keychron(uint8_t led_min, uint8_t led_max) {
-    #ifdef FACTORY_RESET_ENABLE
-    if (!rgb_matrix_indicators_advanced_ft(led_min, led_max)) {
+bool rgb_matrix_indicators_kb(void) {
+    if (!rgb_matrix_indicators_user()) {
         return false;
     }
-    #endif  // FACTORY_RESET_ENABLE
+#    if defined(CAPS_LOCK_LED_INDEX)
+    if (host_keyboard_led_state().caps_lock) {
+        uint8_t v = light_brightness_get();
+        rgb_matrix_set_color(CAPS_LOCK_LED_INDEX, v, v, v); // white, with the adjusted brightness
+    }
+#    endif
+#    if defined(NUM_LOCK_LED_INDEX)
+    if (host_keyboard_led_state().num_lock) {
+        uint8_t v = light_brightness_get();
+        rgb_matrix_set_color(NUM_LOCK_LED_INDEX, v, v, v); // white, with the adjusted brightness
+    }
+#    endif
+#    if defined(SCROLL_LOCK_LED_INDEX)
+    if (host_keyboard_led_state().scroll_lock) {
+        uint8_t v = light_brightness_get();
+        rgb_matrix_set_color(SCROLL_LOCK_LED_INDEX, v, v, v); // white, with the adjusted brightness
+    }
+#    endif
     return true;
 }
 
-#if defined(CAPS_LOCK_LED_INDEX) || defined(NUM_LOCK_LED_INDEX) || defined(SCROLL_LOCK_LED_INDEX)
-
-#if defined(CAPS_LOCK_LED_COLOR) || defined(NUM_LOCK_LED_COLOR) || defined(SCROLL_LOCK_LED_COLOR)
-static void __rgb_matrix_set_color_b(int index, uint8_t r, uint8_t g, uint8_t b) {
-    uint8_t v = light_brightness_get();
-
-    HSV hsv = rgb_to_hsv(to_rgb(r, g, b));
-    RGB rgb = hsv_to_rgb(to_hsv(hsv.h, hsv.s, v));
-    rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
-}
-#else
-static void __rgb_matrix_set_color_w(int index) {
-    uint8_t v = light_brightness_get();
-    rgb_matrix_set_color(index, v, v, v);
-}
-#endif  // CAPS_LOCK_LED_COLOR | NUM_LOCK_LED_COLOR | SCROLL_LOCK_LED_COLOR
-
-void rgb_matrix_indicators_keychron(void) {
-    // this code executes when the matrix is enabled
-
-    #ifdef CAPS_LOCK_LED_INDEX
-    if (host_keyboard_led_state().caps_lock) {
-        #ifdef CAPS_LOCK_LED_COLOR
-        __rgb_matrix_set_color_b(CAPS_LOCK_LED_INDEX, caps_lock_led_color.r, caps_lock_led_color.g, caps_lock_led_color.b);
-        #else
-        __rgb_matrix_set_color_w(CAPS_LOCK_LED_INDEX);
-        #endif  // CAPS_LOCK_LED_COLOR
-    }
-    #endif  // CAPS_LOCK_LED_INDEX
-
-    #ifdef NUM_LOCK_LED_INDEX
-    if (host_keyboard_led_state().num_lock) {
-        #ifdef NUM_LOCK_LED_COLOR
-        __rgb_matrix_set_color_b(NUM_LOCK_LED_INDEX, num_lock_led_color.r, num_lock_led_color.g, num_lock_led_color.b);
-        #else
-        __rgb_matrix_set_color_w(NUM_LOCK_LED_INDEX);
-        #endif  // NUM_LOCK_LED_COLOR
-    }
-    #endif  // NUM_LOCK_LED_INDEX
-
-    #ifdef SCROLL_LOCK_LED_INDEX
-    if (host_keyboard_led_state().scroll_lock) {
-        #ifdef SCROLL_LOCK_LED_COLOR
-        __rgb_matrix_set_color_b(SCROLL_LOCK_LED_INDEX, scroll_lock_led_color.r, scroll_lock_led_color.g, scroll_lock_led_color.b);
-        #else
-        __rgb_matrix_set_color_w(SCROLL_LOCK_LED_INDEX);
-        #endif  // SCROLL_LOCK_LED_COLOR
-    }
-    #endif  // SCROLL_LOCK_LED_INDEX
+void rgb_matrix_indicators_none_kb(void) {
+    rgb_matrix_indicators_kb();
+    rgb_matrix_update_pwm_buffers();
 }
 
-bool led_update_keychron(led_t led_state) {
-    // this code executes regardless of matrix enabled state
+bool led_update_kb(led_t led_state) {
     bool res = led_update_user(led_state);
 
     if (rgb_matrix_is_enabled()
-        #if defined(ENABLE_RGB_MATRIX_RAINDROPS)
+#    if defined(ENABLE_RGB_MATRIX_RAINDROPS)
         && (rgb_matrix_get_mode() != RGB_MATRIX_RAINDROPS)
-        #endif
-        #if defined(ENABLE_RGB_MATRIX_JELLYBEAN_RAINDROPS)
+#    endif
+#    if defined(ENABLE_RGB_MATRIX_JELLYBEAN_RAINDROPS)
         && (rgb_matrix_get_mode() != RGB_MATRIX_JELLYBEAN_RAINDROPS)
-        #endif
-        #if defined(ENABLE_RGB_MATRIX_PIXEL_RAIN)
+#    endif
+#    if defined(ENABLE_RGB_MATRIX_PIXEL_RAIN)
         && (rgb_matrix_get_mode() != RGB_MATRIX_PIXEL_RAIN)
-        #endif
-        ) {
+#    endif
+    ) {
         return res;
     }
 
-    // this code executes when the matrix is NOT enabled
     if (res) {
-        #ifdef CAPS_LOCK_LED_INDEX
+#    if defined(CAPS_LOCK_LED_INDEX)
         if (led_state.caps_lock) {
-            #ifdef CAPS_LOCK_LED_COLOR
-            __rgb_matrix_set_color_b(CAPS_LOCK_LED_INDEX, caps_lock_led_color.r, caps_lock_led_color.g, caps_lock_led_color.b);
-            #else
-            __rgb_matrix_set_color_w(CAPS_LOCK_LED_INDEX);
-            #endif  // CAPS_LOCK_LED_COLOR
+            uint8_t v = light_brightness_get();
+            rgb_matrix_set_color(CAPS_LOCK_LED_INDEX, v, v, v);
         } else {
-            rgb_matrix_set_color(CAPS_LOCK_LED_INDEX, HSV_OFF);
+            rgb_matrix_set_color(CAPS_LOCK_LED_INDEX, 0, 0, 0);
         }
-        #endif  // CAPS_LOCK_LED_INDEX
-
-        #ifdef NUM_LOCK_LED_INDEX
+#    endif
+#    if defined(NUM_LOCK_LED_INDEX)
         if (led_state.num_lock) {
-            #ifdef NUM_LOCK_LED_COLOR
-            __rgb_matrix_set_color_b(NUM_LOCK_LED_INDEX, num_lock_led_color.r, num_lock_led_color.g, num_lock_led_color.b);
-            #else
-            __rgb_matrix_set_color_w(NUM_LOCK_LED_INDEX);
-            #endif  // NUM_LOCK_LED_COLOR
+            uint8_t v = light_brightness_get();
+            rgb_matrix_set_color(NUM_LOCK_LED_INDEX, v, v, v);
         } else {
-            rgb_matrix_set_color(NUM_LOCK_LED_INDEX, HSV_OFF);
+            rgb_matrix_set_color(NUM_LOCK_LED_INDEX, 0, 0, 0);
         }
-        #endif  // NUM_LOCK_LED_INDEX
-
-        #ifdef SCROLL_LOCK_LED_INDEX
+#    endif
+#    if defined(SCROLL_LOCK_LED_INDEX)
         if (led_state.scroll_lock) {
-            #ifdef SCROLL_LOCK_LED_COLOR
-            __rgb_matrix_set_color_b(SCROLL_LOCK_LED_INDEX, scroll_lock_led_color.r, scroll_lock_led_color.g, scroll_lock_led_color.b);
-            #else
-            __rgb_matrix_set_color_w(SCROLL_LOCK_LED_INDEX);
-            #endif  // SCROLL_LOCK_LED_COLOR
+            uint8_t v = light_brightness_get();
+            rgb_matrix_set_color(SCROLL_LOCK_LED_INDEX, v, v, v);
         } else {
-            rgb_matrix_set_color(SCROLL_LOCK_LED_INDEX, HSV_OFF);
+            rgb_matrix_set_color(SCROLL_LOCK_LED_INDEX, 0, 0, 0);
         }
-        #endif  // SCROLL_LOCK_LED_INDEX
+#    endif
 
         rgb_matrix_update_pwm_buffers();
     }
-
     return res;
 }
 
-#endif  // CAPS_LOCK_LED_INDEX | NUM_LOCK_LED_INDEX | SCROLL_LOCK_LED_INDEX
+#endif
+
+#if defined(ENCODER_ENABLE) && defined(PAL_USE_CALLBACKS)
+
+static void encoder_pad_cb(void *param) {
+    encoder_inerrupt_read((uint32_t)param & 0XFF);
+}
+
+__attribute__((weak)) void keyboard_post_init_kb(void) {
+    pin_t encoders_pad_a[NUM_ENCODERS] = ENCODERS_PAD_A;
+    pin_t encoders_pad_b[NUM_ENCODERS] = ENCODERS_PAD_B;
+    for (uint32_t i = 0; i < NUM_ENCODERS; i++) {
+        palEnableLineEvent(encoders_pad_a[i], PAL_EVENT_MODE_BOTH_EDGES);
+        palEnableLineEvent(encoders_pad_b[i], PAL_EVENT_MODE_BOTH_EDGES);
+        palSetLineCallback(encoders_pad_a[i], encoder_pad_cb, (void *)i);
+        palSetLineCallback(encoders_pad_b[i], encoder_pad_cb, (void *)i);
+    }
+}
+
+#endif  // ENCODER_ENABLE
+
+#ifdef LED_MATRIX_ENABLE
+
+__attribute__((weak)) bool led_matrix_indicators_advanced_ft(uint8_t led_min, uint8_t led_max) {
+    return true;
+}
+
+bool led_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
+    if (!led_matrix_indicators_advanced_ft(led_min, led_max)) { return false; }
+    if (!led_matrix_indicators_advanced_user(led_min, led_max)) { return false; }
+    return true;
+}
+
+#endif  // LED_MATRIX_ENABLE
+
+#ifdef RGB_MATRIX_ENABLE
+
+__attribute__((weak)) bool rgb_matrix_indicators_advanced_ft(uint8_t led_min, uint8_t led_max) {
+    return true;
+}
+
+bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
+    if (!rgb_matrix_indicators_advanced_ft(led_min, led_max)) { return false; }
+    if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) { return false; }
+    return true;
+}
+
 #endif  // RGB_MATRIX_ENABLE
