@@ -1,47 +1,40 @@
-// Copyright 2022 Keychron (https://www.keychron.com)
+// Copyright 2022 Keychron(https://www.keychron.com)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #pragma once
-
-/* EEPROM Driver Configuration */
-#define WEAR_LEVELING_LOGICAL_SIZE 2048
-#define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
 
 /* RGB Matrix Driver Configuration */
 #define DRIVER_COUNT 2
 #define DRIVER_ADDR_1 0b1110111
 #define DRIVER_ADDR_2 0b1110100
 
-#ifdef I2C_1MHZ_ENABLE
-    /* Increase I2C speed to 1000 KHz */
-    #define I2C1_TIMINGR_PRESC 0U
-    #define I2C1_TIMINGR_SCLDEL 3U
-    #define I2C1_TIMINGR_SDADEL 0U
-    #define I2C1_TIMINGR_SCLH 15U
-    #define I2C1_TIMINGR_SCLL 51U
-#else
-    #define USB_POLLING_INTERVAL_MS 4  // all I need is 250Hz
-#endif  // I2C_1MHZ_ENABLE
+/* Increase I2C speed to 1000 KHz */
+#define I2C1_TIMINGR_PRESC 0U
+#define I2C1_TIMINGR_SCLDEL 3U
+#define I2C1_TIMINGR_SDADEL 0U
+#define I2C1_TIMINGR_SCLH 15U
+#define I2C1_TIMINGR_SCLL 51U
 
-#define CKLED2001_CURRENT_TUNE { 0xA4, 0xA4, 0x52, 0xA4, 0xA4, 0x52, 0xA4, 0xA4, 0x52, 0xA4, 0xA4, 0x52 }
+/* Set LED driver current */
+#define CKLED2001_CURRENT_TUNE \
+    { 0xA4, 0xA4, 0x52, 0xA4, 0xA4, 0x52, 0xA4, 0xA4, 0x52, 0xA4, 0xA4, 0x52 }
+
+/* DIP switch */
+#define DIP_SWITCH_MATRIX_GRID { { 5, 4 } }
+#define SCAN_COUNT_MAX 100
 
 /* Disable DIP switch in matrix data */
 #define MATRIX_MASKED
 
-/* Enable receive custom command from host */
-#ifndef VIA_ENABLED
-    #define RAW_HID_CMD 0xAB
-#endif  // VIA_ENABLED
-
 /* Tap-Hold Configuration */
 #define HOLD_ON_OTHER_KEY_PRESS
 
-/* RGB Matrix */
-#define RGB_DISABLE_WHEN_USB_SUSPENDED  // turn off effects when suspended
-#define RGB_TRIGGER_ON_KEYDOWN  // Triggers RGB keypress events on key down
+/* turn off effects when suspended */
+#define RGB_DISABLE_WHEN_USB_SUSPENDED
 
-#define RGB_MATRIX_FRAMEBUFFER_EFFECTS
-#define RGB_MATRIX_KEYPRESSES
+/* EEPROM Driver Configuration */
+#define WEAR_LEVELING_LOGICAL_SIZE 2048
+#define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
 
 // RGB Matrix Animation modes. Explicitly enabled
 // For full list of effects, see:
@@ -76,11 +69,13 @@
 // #define ENABLE_RGB_MATRIX_PIXEL_FLOW
 // #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
 
-/* enabled only if RGB_MATRIX_FRAMEBUFFER_EFFECTS is defined */
+#define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+// enabled only if RGB_MATRIX_FRAMEBUFFER_EFFECTS is defined
 #define ENABLE_RGB_MATRIX_TYPING_HEATMAP
 #define ENABLE_RGB_MATRIX_DIGITAL_RAIN
 
-/* enabled only of RGB_MATRIX_KEYPRESSES or RGB_MATRIX_KEYRELEASES is defined */
+#define RGB_MATRIX_KEYPRESSES
+// enabled only of RGB_MATRIX_KEYPRESSES or RGB_MATRIX_KEYRELEASES is defined
 #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
 // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE
 // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
@@ -93,3 +88,11 @@
 // #define ENABLE_RGB_MATRIX_MULTISPLASH
 #define ENABLE_RGB_MATRIX_SOLID_SPLASH
 // #define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
+
+/* Factory test keys */
+#define FN_KEY1 MO(1)
+#define FN_KEY2 MO(3)
+
+#define HC595_DS C15
+#define HC595_SHCP A1
+#define HC595_STCP A0

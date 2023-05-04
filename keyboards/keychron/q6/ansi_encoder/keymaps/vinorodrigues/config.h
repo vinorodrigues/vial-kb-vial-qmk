@@ -17,7 +17,7 @@
 #define WIN_FN_LAYER 4  // used in factory reset
 
 /* Tap Code */
-#define TAPPING_TERM 250
+#define TAPPING_TERM 100
 #define PERMISSIVE_HOLD
 #define IGNORE_MOD_TAP_INTERRUPT
 #define TAP_CODE_DELAY 10
@@ -60,7 +60,6 @@
 #define DICE_5_LED_INDEX 25
 #define DICE_6_LED_INDEX 26
 #define LED_COLOR_DICE RGB_TEAL
-
 
 // RGB Matrix Animation modes. Explicitly enabled
 // `////` = already in base `config.h`

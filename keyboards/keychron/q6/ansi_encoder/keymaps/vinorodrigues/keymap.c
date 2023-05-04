@@ -3,6 +3,7 @@
 
 #include QMK_KEYBOARD_H
 #include "keychron_common.h"
+#include "keychron_ft_common.h"
 #include "vinorodrigues_common.h"
 #include "caffeine.h"
 #include "dice.h"
@@ -29,6 +30,11 @@ enum my_layers {
 #define KK_RCMD KC_RCMMD
 #define RGB_RMD RGB_RMOD
 
+#define KC_CAFFEINE_TOGGLE (KC_VERSION + 1)
+#define KC_ROLL_DICE (KC_VERSION + 2)
+#define KC_CAFF KC_CAFFEINE_TOGGLE
+#define KC_DICE KC_ROLL_DICE
+
 #ifdef CONSOLE_ENABLE
     #define _DEBUG_ DB_TOGG
 #else
@@ -37,10 +43,10 @@ enum my_layers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_BASE] = LAYOUT_ansi_109(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_MUTE, KC_SNAP, KC_SIRI, RGB_TOG, KC_F13,  KC_F14,  KC_F15,  KC_F16,
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_MUTE, KC_SNAP, KC_SIRI, KC_LOCK, KC_F13,  KC_F14,  KC_F15,  KC_F16,
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_INS,  KC_HOME, KC_PGUP, KC_M_NL, KC_PSLS, KC_PAST, KC_PMNS,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_DEL,  KC_END,  KC_PGDN, KC_HOME, KC_UP,   KC_PGUP, KC_PPLS,
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,                             KC_LEFT, XXXXXXX, KC_RGHT,
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,                             KC_LEFT, KC_APFN, KC_RGHT,
         KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT,          KC_UP,            KC_END,  KC_DOWN, KC_PGDN, KC_ENT,
         KC_LCTL, KK_LOPT, KK_LCMD,                            KC_SPC,                             KK_RCMD, KK_ROPT, KC_M_FN, KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT, KC_INS,           KC_DEL           ),
 
@@ -115,12 +121,11 @@ static void __rgb_matrix_set_color_w(int index) {
 
 void keyboard_pre_init_user(void) {
     // override config.flags with new values
-    memcpy(g_led_config.flags, g_led_config_new_flags, RGB_MATRIX_LED_COUNT);
-    // for (int i = 0; i < DRIVER_LED_TOTAL; i++) g_led_config.flags[i] = g_led_config_new_flags[i];
+    memcpy(g_led_config.flags, g_led_config_new_flags, RGB_MATRIX_LED_COUNT);  // faster method
 }
 
 bool rgb_matrix_indicators_user(void) {
-    // don't call _keychron, that's already in `q6.c`
+    // don't call *_keychron, that's already in `q6.c`
     if (!rgb_matrix_indicators_caffeine()) return false;
     if (!rgb_matrix_indicators_dice()) return false;
 
@@ -128,6 +133,11 @@ bool rgb_matrix_indicators_user(void) {
         __rgb_matrix_set_color_w(NUM_LOCK_LED_INDEX);
     }
 
+    return true;
+}
+
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (!rgb_matrix_indicators_advanced_vinorodrigues(led_min, led_max)) return false;
     return true;
 }
 
@@ -166,6 +176,7 @@ bool led_update_user(led_t led_state) {
  * ======================== */
 
 void keyboard_post_init_user(void) {
+    // called after `keyboard_post_init_keychron`
     keyboard_post_init_vinorodrigues();
     keyboard_post_init_caffeine();
     keyboard_post_init_dice();
@@ -180,7 +191,6 @@ void keyboard_post_init_user(void) {
 }
 
 void eeconfig_init_user(void) {
-    // eeconfig_init_vinorodrigues();
     keyboard_post_init_user();
 }
 
@@ -192,37 +202,42 @@ void matrix_scan_user(void) {
 // Gets called at the end of all QMK processing, before starting the next iteration
 void housekeeping_task_user(void) {
     housekeeping_task_keychron();
+    housekeeping_task_keychron_ft();
     housekeeping_task_vinorodrigues();
     housekeeping_task_caffeine();
     housekeeping_task_dice();
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!process_record_keychron(keycode, record)) return false;
-    if (!process_record_vinorodrigues(keycode, record)) return false;
+    if (!process_record_keychron(keycode, record)) { return false; }
+    if (!process_record_keychron_ft(keycode, record)) { return false; }
+    if (!process_record_vinorodrigues(keycode, record)) { return false; }
 
     switch (keycode) {
         case KC_CAFFEINE_TOGGLE: return caffeine_process_toggle_keycode(record);
         case KC_ROLL_DICE: return dice_process_toggle_keycode(record);
         default: return true;
     }
+
+    return true;
 }
 
 #ifdef DIP_SWITCH_ENABLE
 bool dip_switch_update_user(uint8_t index, bool active) {
     if (index == 0) {
-        layer_state_set(1UL << (active ? WIN_BASE : MAC_BASE));
         default_layer_set(1UL << (active ? WIN_BASE : MAC_BASE));
-        return false;
     }
     return true;
 }
-#endif  // DIP_SWITCH_ENABLE
+#endif
 
 #ifdef RGB_MATRIX_ENABLE
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    if (!rgb_matrix_indicators_advanced_keychron(led_min, led_max)) return false;
-    if (!rgb_matrix_indicators_advanced_vinorodrigues(led_min, led_max)) return false;
-    return true;
+extern void rgb_matrix_update_pwm_buffers(void);
+#endif
+
+void shutdown_user(void) {
+    #ifdef RGB_MATRIX_ENABLE
+    rgb_matrix_set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, 0, 0);  // All red
+    rgb_matrix_update_pwm_buffers();
+    #endif
 }
-#endif  // RGB_MATRIX_ENABLE

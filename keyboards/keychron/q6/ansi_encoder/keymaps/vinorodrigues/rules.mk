@@ -6,16 +6,14 @@ VIAL_ENABLE = yes
 VIALRGB_ENABLE = yes
 ENCODER_MAP_ENABLE = yes
 
+NKRO_ENABLE = no
+APPLE_FN_ENABLE = yes
+
 EEPROM_DRIVER = i2c
 OPT_DEFS += -DEXTERNAL_EEPROM_ENABLE
 OPT_DEFS += -DFACTORY_RESET_ENABLE
 
 DEBOUNCE_TYPE = asym_eager_defer_pk
 
-VPATH += keyboards/keychron/common
-# SRC += color_util.c
-SRC += keychron_common.c
-SRC += keychron_factory_test_common.c
-SRC += vinorodrigues_common.c
-SRC += caffeine.c
-SRC += dice.c
+SRC += keychron_common.c keychron_ft_common.c
+SRC += vinorodrigues_common.c caffeine.c dice.c
