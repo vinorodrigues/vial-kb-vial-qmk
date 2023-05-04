@@ -10,7 +10,7 @@
 #define VIAL_UNLOCK_COMBO_COLS { 0, 13 }
 
 /* Tap Code */
-#define TAPPING_TERM 250
+#define TAPPING_TERM 100
 #define PERMISSIVE_HOLD
 #define IGNORE_MOD_TAP_INTERRUPT
 #define TAP_CODE_DELAY 10
@@ -35,7 +35,6 @@
 #endif
 
 /* used in `vinorodrigues_common.c` */
-#define KC_FIRST_USABLE_USERCODE (USER00 + 11)
 #define LED_COLOR_ALPHA_CAPS RGB_RED
 #define LED_COLOR_LAYER_1 RGB_BLUE
 #define LED_COLOR_LAYER_3 RGB_GREEN

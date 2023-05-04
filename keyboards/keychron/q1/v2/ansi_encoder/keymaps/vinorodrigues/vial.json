@@ -13,10 +13,12 @@
         {"name": "FlXp",  "title": "File Explorer in windows", "shortName": "KC_FLXP"},
         {"name": "Snap",  "title": "Screenshot in macOS",      "shortName": "KC_SNAP"},
         {"name": "Crtn",  "title": "Cortana in windows",       "shortName": "KC_CRTA"},
-        {"name": "Caff",  "title": "Screen saver inhibitor",   "shortName": "KC_CAFF"},
-        {"name": "Dice",  "title": "Roll the Dice",            "shortName": "KC_DICE"},
+        {"name": "Fn",    "title": "Apple Fn key in macOS",    "shortName": "KC_APFN"},
+        {"name": "Lock",  "title": "Lock and Sleep in macOS",  "shortName": "KC_LOCK"},
         {"name": "EECl",  "title": "Reset Keymap to Default",  "shortName": "KC_EECL"},
-        {"name": "Vrsn",  "title": "Type Firmware Version",    "shortName": "KC_VRSN"}
+        {"name": "Vrsn",  "title": "Type Firmware Version",    "shortName": "KC_VRSN"},
+        {"name": "Caff",  "title": "Screen saver inhibitor",   "shortName": "KC_CAFF"},
+        {"name": "Dice",  "title": "Roll the Dice",            "shortName": "KC_DICE"}
     ],
     "layouts": {
         "keymap": [

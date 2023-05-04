@@ -3,21 +3,10 @@
 
 #include "quantum.h"
 
-const matrix_row_t matrix_mask[] = {
-    0b1111111111111111,
-    0b1111111111111111,
-    0b1111111111111111,
-    0b1111111111111111,
-    0b1111111111111111,
-    0b1111111111101111,
-};
-
-// clang-format off
-
 #ifdef RGB_MATRIX_ENABLE
 
 const ckled2001_led PROGMEM g_ckled2001_leds[RGB_MATRIX_LED_COUNT] = {
-/* Refer to IS31 manual for these locations
+/* Refer to CKLED2001 manual for these locations
  *   driver
  *   |  R location
  *   |  |       G location
@@ -37,6 +26,7 @@ const ckled2001_led PROGMEM g_ckled2001_leds[RGB_MATRIX_LED_COUNT] = {
     {0, C_12,   A_12,   B_12},
     {0, C_13,   A_13,   B_13},
     {0, C_14,   A_14,   B_14},
+    {0, C_16,   A_16,   B_16},
 
     {0, I_1,    G_1,    H_1},
     {0, I_2,    G_2,    H_2},
@@ -111,28 +101,4 @@ const ckled2001_led PROGMEM g_ckled2001_leds[RGB_MATRIX_LED_COUNT] = {
     {1, C_16,   A_16,   B_16},
 };
 
-#endif // RGB_MATRIX_ENABLE
-
-#if defined(ENCODER_ENABLE) && defined(PAL_USE_CALLBACKS)
-
-void encoder0_pad_cb(void *param) {
-    (void)param;
-    encoder_insert_state();
-}
-
-void keyboard_post_init_kb(void) {
-    pin_t encoders_pad_a[NUM_ENCODERS] = ENCODERS_PAD_A;
-    pin_t encoders_pad_b[NUM_ENCODERS] = ENCODERS_PAD_B;
-
-    for (uint8_t i = 0; i < NUM_ENCODERS; i++) {
-        palEnableLineEvent(encoders_pad_a[i], PAL_EVENT_MODE_BOTH_EDGES);
-        palEnableLineEvent(encoders_pad_b[i], PAL_EVENT_MODE_BOTH_EDGES);
-        palSetLineCallback(encoders_pad_a[i], encoder0_pad_cb, NULL);
-        palSetLineCallback(encoders_pad_b[i], encoder0_pad_cb, NULL);
-    }
-
-    // allow user keymaps to do custom post_init
-    keyboard_post_init_user();
-}
-
-#endif  // ENCODER_ENABLE
+#endif
