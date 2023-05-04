@@ -80,8 +80,8 @@ bool process_record_keychron(uint16_t keycode, keyrecord_t *record) {
         case KC_MISSION_CONTROL: return keychron_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS);
         case KC_LAUNCHPAD: return keychron_host_consumer_send(record, _AC_SHOW_ALL_APPS);
         #else
-        case QK_KB_0: return keychron_register_code(KC_MISSION_CONTROL);
-        case QK_KB_1: return keychron_register_code(KC_LAUNCHPAD);
+        case QK_KB_0: return keychron_register_code(record, KC_MISSION_CONTROL);
+        case QK_KB_1: return keychron_register_code(record, KC_LAUNCHPAD);
         #endif  // VIAL_ENABLE
 
         case KC_LOPTN: return keychron_register_code(record, KC_LOPT);

@@ -29,12 +29,12 @@
 /* Tap-Hold Configuration */
 #define HOLD_ON_OTHER_KEY_PRESS
 
-/* turn off effects when suspended */
-#define RGB_DISABLE_WHEN_USB_SUSPENDED
-
 /* EEPROM Driver Configuration */
 #define WEAR_LEVELING_LOGICAL_SIZE 2048
 #define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
+
+/* Disable RGB lighting when PC is in suspend */
+#define RGB_DISABLE_WHEN_USB_SUSPENDED
 
 // RGB Matrix Animation modes. Explicitly enabled
 // For full list of effects, see:

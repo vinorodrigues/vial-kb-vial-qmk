@@ -58,9 +58,18 @@ static bool __lock_and_sleep(keyrecord_t *record) {
     return false;
 }
 
+static uint8_t __get_max_brightness(void) {
+    #ifdef RGB_MATRIX_MAXIMUM_BRIGHTNESS
+    return RGB_MATRIX_MAXIMUM_BRIGHTNESS;
+    #else
+    return 255;
+    #endif
+}
+
 static bool __eeprom_clear(keyrecord_t *record) {
     if (record->event.pressed) {
-        rgb_matrix_set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, RGB_MATRIX_MAXIMUM_BRIGHTNESS, 0);  // All yellow
+        uint8_t v = __get_max_brightness();
+        rgb_matrix_set_color_all(v, v, 0);  // All yellow
         rgb_matrix_update_pwm_buffers();
         wait_ms(10);  // give it time
 
@@ -77,7 +86,8 @@ static bool __eeprom_clear(keyrecord_t *record) {
 static bool __keyboard_boot(keyrecord_t *record) {
     // does not really boot - just set's up the LED to show red
     if (record->event.pressed) {
-        rgb_matrix_set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, 0, 0);  // All red
+        uint8_t v = __get_max_brightness();
+        rgb_matrix_set_color_all(v, 0, 0);  // All red
         rgb_matrix_update_pwm_buffers();
         wait_ms(10);  // give it time to change LED's
     }
