@@ -141,6 +141,7 @@ static bool __lock_and_sleep_delay(keyrecord_t *record) {
         macos_lock_enabled = true;
     } else {
         macos_lock_enabled = false;
+        timer_macos_lock_buffer = 0;  // arb cleanup
     }
     return false;
 }
@@ -164,7 +165,7 @@ bool process_record_idobao(uint16_t keycode, keyrecord_t *record) {
         case MAGIC_TOGGLE_NKRO:
         case KC_APPLE_FN_KEY:            return idobao_register_code(record, KC_APPLE_FN);
         case MAGIC_HOST_NKRO:
-        case MAGIC_UNHOST_NKRO:          return false;  // discard these key
+        case MAGIC_UNHOST_NKRO:          return false;  // discard these keys
         #endif  // APPLE_FN_ENABLE
         case KC_MISSION_CONTROL:         return idobao_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS);
         case KC_LAUNCHPAD:               return idobao_host_consumer_send(record, _AC_SHOW_ALL_APPS);
