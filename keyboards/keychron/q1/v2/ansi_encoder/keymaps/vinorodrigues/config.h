@@ -42,15 +42,15 @@
 /* used in `keymap.c` */
 // #define CAFFEINE_KEY_DELAY 59000
 // #define CAFFEINE_KEY_CODE KC_RIGHT_CTRL
-#define CAFFEINE_LED_INDEX 71  // Left Ctrl
+#define CAFFEINE_LED_INDEX 72  // Left Ctrl
 #define LED_COLOR_CAFFEINE RGB_PURPLE
 
-#define DICE_1_LED_INDEX 15
-#define DICE_2_LED_INDEX 16
-#define DICE_3_LED_INDEX 17
-#define DICE_4_LED_INDEX 18
-#define DICE_5_LED_INDEX 19
-#define DICE_6_LED_INDEX 20
+#define DICE_1_LED_INDEX 16
+#define DICE_2_LED_INDEX 17
+#define DICE_3_LED_INDEX 18
+#define DICE_4_LED_INDEX 19
+#define DICE_5_LED_INDEX 20
+#define DICE_6_LED_INDEX 21
 #define LED_COLOR_DICE RGB_TEAL
 
 
