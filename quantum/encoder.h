@@ -20,9 +20,11 @@
 #include "quantum.h"
 #include "util.h"
 
+#define ENCODER_INTERRUPT_PATCH
+
 void encoder_init(void);
 bool encoder_read(void);
-void encoder_inerrupt_read(uint8_t index);
+void encoder_interrupt_read(uint8_t index);
 
 bool encoder_update_kb(uint8_t index, bool clockwise);
 bool encoder_update_user(uint8_t index, bool clockwise);
