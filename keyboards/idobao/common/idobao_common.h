@@ -11,20 +11,22 @@
     #define USER00 (SAFE_RANGE)
 #endif
 
-enum keycron_custom_keycodes {
+#ifdef VIAL_ENABLE
+    #define QK_KB_0 (USER00)
+#endif
+
+enum idobao_custom_keycodes {
     // Windows
-    KC_TASK_VIEW = USER00,
+    KC_TASK_VIEW = QK_KB_0,
     KC_FILE_EXPLORER,
     KC_CORTANA,
 
     // macOS
-    KC_APPLE_FN_KEY,
     KC_MISSION_CONTROL,
     KC_LAUNCHPAD,
     KC_SIRI,
     KC_SCREEN_SHOT,
     KC_LOCK_AND_SLEEP,
-    KC_LOCK_AND_SLEEP_DELAYED,
 
     // General
     KC_CLEAR_EEPROM,
@@ -40,12 +42,10 @@ enum macos_consumer_usages {
 #define KC_FLXP KC_FILE_EXPLORER
 #define KC_CRTA KC_CORTANA
 
-#define KC_APPL KC_APPLE_FN_KEY
 #define KC_MCTL KC_MISSION_CONTROL
 #define KC_LPAD KC_LAUNCHPAD
 #define KC_SNAP KC_SCREEN_SHOT
 #define KC_LOCK KC_LOCK_AND_SLEEP
-#define KC_LOKD KC_LOCK_AND_SLEEP_DELAYED
 
 #define KC_EECL KC_CLEAR_EEPROM
 #define KC_VERS KC_VERSION
@@ -59,8 +59,6 @@ bool idobao_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data2,
 
 void housekeeping_task_idobao(void);
 bool process_record_idobao(uint16_t keycode, keyrecord_t *record);
-
-bool dip_switch_update_idobao(uint8_t index, bool active);
 
 #ifdef RGB_MATRIX_ENABLE
 

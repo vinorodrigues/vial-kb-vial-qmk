@@ -129,19 +129,18 @@ void __do_lock_and_sleep(void) {
 }
 
 static bool __lock_and_sleep(keyrecord_t *record) {
-    if (record->event.pressed) {
-        __do_lock_and_sleep();
-    }
-    return false;
-}
-
-static bool __lock_and_sleep_delay(keyrecord_t *record) {
-    if (record->event.pressed) {
-        timer_macos_lock_buffer = sync_timer_read32();
-        macos_lock_enabled = true;
+    if ((get_mods() & MOD_MASK_CSAG)) {
+        if (record->event.pressed) {
+            __do_lock_and_sleep();
+        }
     } else {
-        macos_lock_enabled = false;
-        timer_macos_lock_buffer = 0;  // arb cleanup
+        if (record->event.pressed) {
+            timer_macos_lock_buffer = sync_timer_read32();
+            macos_lock_enabled = true;
+        } else {
+            macos_lock_enabled = false;
+            timer_macos_lock_buffer = 0;  // arb cleanup
+        }
     }
     return false;
 }
@@ -156,41 +155,32 @@ void housekeeping_task_idobao(void) {
 bool process_record_idobao(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         // Windows
-        case KC_TASK_VIEW:               return idobao_register_code_2(record, KC_LWIN, KC_TAB);
-        case KC_FILE_EXPLORER:           return idobao_register_code_2(record, KC_LWIN, KC_E);
-        case KC_CORTANA:                 return idobao_register_code_2(record, KC_LWIN, KC_C);
+        case KC_TASK_VIEW:       return idobao_register_code_2(record, KC_LWIN, KC_TAB); break;
+        case KC_FILE_EXPLORER:   return idobao_register_code_2(record, KC_LWIN, KC_E); break;
+        case KC_CORTANA:         return idobao_register_code_2(record, KC_LWIN, KC_C); break;
 
         // macOS
-        #ifdef APPLE_FN_ENABLE
-        case MAGIC_TOGGLE_NKRO:
-        case KC_APPLE_FN_KEY:            return idobao_register_code(record, KC_APPLE_FN);
-        case MAGIC_HOST_NKRO:
-        case MAGIC_UNHOST_NKRO:          return false;  // discard these keys
-        #endif  // APPLE_FN_ENABLE
-        case KC_MISSION_CONTROL:         return idobao_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS);
-        case KC_LAUNCHPAD:               return idobao_host_consumer_send(record, _AC_SHOW_ALL_APPS);
-        case KC_SIRI:                    return idobao_register_code_2(record, KC_LOPT, KC_SPACE);
-        case KC_SCREEN_SHOT:             return idobao_register_code_3(record, KC_LSFT, KC_LCMD, KC_4);
-        case KC_LOCK_AND_SLEEP:          return __lock_and_sleep(record);
-        case KC_LOCK_AND_SLEEP_DELAYED:  return __lock_and_sleep_delay(record);
+        case KC_MISSION_CONTROL: return idobao_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS); break;
+        case KC_LAUNCHPAD:       return idobao_host_consumer_send(record, _AC_SHOW_ALL_APPS); break;
+        case KC_SIRI:            return idobao_register_code_2(record, KC_LOPT, KC_SPACE); break;
+        case KC_SCREEN_SHOT:     return idobao_register_code_3(record, KC_LSFT, KC_LCMD, KC_4); break;
+        case KC_LOCK_AND_SLEEP:  return __lock_and_sleep(record); break;
 
         // general
-        case KC_CLEAR_EEPROM:            return __eeprom_clear(record);
-        case KC_VERSION:                 return __print_version(record);
+        case KC_CLEAR_EEPROM:    return __eeprom_clear(record); break;
+        case KC_VERSION:         return __print_version(record); break;
 
         default:
             return true;  // Process all other keycodes normally
     }
 }
 
-__attribute__((weak)) bool dip_switch_update_idobao(uint8_t index, bool active) { return true; }
-
 #ifdef RGB_MATRIX_ENABLE
 
 extern void rgb_matrix_update_pwm_buffers(void);
 
 #ifndef RGB_MATRIX_MAXIMUM_BRIGHTNESS
-    #define INDICATOR_MAX_BRIGHTNESS 0xFF
+    #define INDICATOR_MAX_BRIGHTNESS 170  // approx 66%
 #else
     #define INDICATOR_MAX_BRIGHTNESS RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #endif
