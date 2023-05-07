@@ -213,9 +213,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_vinorodrigues(keycode, record)) { return false; }
 
     switch (keycode) {
-        case KC_CAFFEINE_TOGGLE: return caffeine_process_toggle_keycode(record);
-        case KC_ROLL_DICE: return dice_process_toggle_keycode(record);
-        default: return true;
+        case KC_CAFFEINE_TOGGLE: return caffeine_process_toggle_keycode(record); break;
+        case KC_ROLL_DICE: return dice_process_toggle_keycode(record); break;
+        default: break;
     }
 
     return true;

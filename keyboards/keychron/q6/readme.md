@@ -1,6 +1,6 @@
 # Keychron Q6
 
-![Keychron Q6](https://i.imgur.com/7h9eBNj.jpg)
+![Keychron Q6](https://i.imgur.com/7h9eBNjh.jpg)
 
 A customizable 100% keyboard.
 
