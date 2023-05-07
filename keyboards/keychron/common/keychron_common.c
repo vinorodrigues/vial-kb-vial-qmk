@@ -74,31 +74,31 @@ static bool keychron_register_code_3(keyrecord_t *record, uint16_t data1, uint16
 
 bool process_record_keychron(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-
         // macOS
         #ifdef VIAL_ENABLE
-        case KC_MISSION_CONTROL: return keychron_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS);
-        case KC_LAUNCHPAD: return keychron_host_consumer_send(record, _AC_SHOW_ALL_APPS);
+        case KC_MISSION_CONTROL: return keychron_host_consumer_send(record, _AC_SHOW_ALL_WINDOWS);  break;
+        case KC_LAUNCHPAD: return keychron_host_consumer_send(record, _AC_SHOW_ALL_APPS);  break;
         #else
-        case QK_KB_0: return keychron_register_code(record, KC_MISSION_CONTROL);
-        case QK_KB_1: return keychron_register_code(record, KC_LAUNCHPAD);
+        case QK_KB_0: return keychron_register_code(record, KC_MISSION_CONTROL); break;
+        case QK_KB_1: return keychron_register_code(record, KC_LAUNCHPAD); break;
         #endif  // VIAL_ENABLE
 
-        case KC_LOPTN: return keychron_register_code(record, KC_LOPT);
-        case KC_ROPTN: return keychron_register_code(record, KC_ROPT);
-        case KC_LCMMD: return keychron_register_code(record, KC_LCMD);
-        case KC_RCMMD: return keychron_register_code(record, KC_RCMD);
-        case KC_SIRI: return keychron_register_code_2(record, KC_LOPT, KC_SPACE);
-        case KC_SCREEN_SHOT: return keychron_register_code_3(record, KC_LSFT, KC_LCMD, KC_4);
+        case KC_LOPTN: return keychron_register_code(record, KC_LOPT); break;
+        case KC_ROPTN: return keychron_register_code(record, KC_ROPT); break;
+        case KC_LCMMD: return keychron_register_code(record, KC_LCMD); break;
+        case KC_RCMMD: return keychron_register_code(record, KC_RCMD); break;
+        case KC_SIRI: return keychron_register_code_2(record, KC_LOPT, KC_SPACE); break;
+        case KC_SCREEN_SHOT: return keychron_register_code_3(record, KC_LSFT, KC_LCMD, KC_4); break;
 
         // Windows
-        case KC_TASK_VIEW: return keychron_register_code_2(record, KC_LWIN, KC_TAB);
-        case KC_FILE_EXPLORER: return keychron_register_code_2(record, KC_LWIN, KC_E);
-        case KC_CORTANA: return keychron_register_code_2(record, KC_LWIN, KC_C);
+        case KC_TASK_VIEW: return keychron_register_code_2(record, KC_LWIN, KC_TAB); break;
+        case KC_FILE_EXPLORER: return keychron_register_code_2(record, KC_LWIN, KC_E); break;
+        case KC_CORTANA: return keychron_register_code_2(record, KC_LWIN, KC_C); break;
 
-        default:
-            return true; // Process all other keycodes normally
+        default: break;
     }
+    
+    return true;  // Process all other keycodes normally
 }
 
 #if defined(RGB_MATRIX_ENABLE) && (defined(CAPS_LOCK_LED_INDEX) || defined(NUM_LOCK_LED_INDEX)) || defined(SCROLL_LOCK_LED_INDEX)

@@ -43,12 +43,12 @@ enum {
 };
 // clang-format on
 
-uint16_t            key_press_status    = 0;
-uint32_t            timer_3s_buffer     = 0;
-uint32_t            timer_300ms_buffer  = 0;
-uint8_t             factory_reset_count = 0;
-bool                report_os_sw_state  = false;
-extern matrix_row_t matrix[MATRIX_ROWS];
+uint16_t key_press_status    = 0;
+uint32_t timer_3s_buffer     = 0;
+uint32_t timer_300ms_buffer  = 0;
+uint8_t  factory_reset_count = 0;
+bool     report_os_sw_state  = false;
+extern   matrix_row_t matrix[MATRIX_ROWS];
 
 #ifdef SPLIT_KEYBOARD
 #    ifdef RGB_MATRIX_ENABLE
@@ -73,7 +73,7 @@ __attribute__((weak)) bool process_record_keychron_ft(uint16_t keycode, keyrecor
                 key_press_status &= ~KEY_PRESS_STEP_0;
                 timer_3s_buffer = 0;
             }
-            return true;
+            return true; break;
 #endif
         case KC_J:
             if (record->event.pressed) {
@@ -85,7 +85,7 @@ __attribute__((weak)) bool process_record_keychron_ft(uint16_t keycode, keyrecor
                 key_press_status &= ~KEY_PRESS_STEP_1;
                 timer_3s_buffer = 0;
             }
-            return true;
+            return true; break;
         case KC_Z:
             if (record->event.pressed) {
                 key_press_status |= KEY_PRESS_STEP_2;
@@ -96,7 +96,7 @@ __attribute__((weak)) bool process_record_keychron_ft(uint16_t keycode, keyrecor
                 key_press_status &= ~KEY_PRESS_STEP_2;
                 timer_3s_buffer = 0;
             }
-            return true;
+            return true; break;
         case BL_TEST_KEY1:
             if (record->event.pressed) {
                 key_press_status |= KEY_PRESS_STEP_3;
@@ -111,7 +111,7 @@ __attribute__((weak)) bool process_record_keychron_ft(uint16_t keycode, keyrecor
                 key_press_status &= ~KEY_PRESS_STEP_3;
                 timer_3s_buffer = 0;
             }
-            return true;
+            return true; break;
         case BL_TEST_KEY2:
             if (record->event.pressed) {
                 key_press_status |= KEY_PRESS_STEP_4;
@@ -124,10 +124,10 @@ __attribute__((weak)) bool process_record_keychron_ft(uint16_t keycode, keyrecor
                 key_press_status &= ~KEY_PRESS_STEP_4;
                 timer_3s_buffer = 0;
             }
-            return true;
-        default:
-            return true;
+            return true; break;
+        default: break;
     }
+    return true;
 }
 
 static void factory_reset(void) {

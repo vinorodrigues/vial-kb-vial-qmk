@@ -120,19 +120,20 @@ bool process_record_vinorodrigues(uint16_t keycode, keyrecord_t *record) {
             } else {
                 unregister_code(KC_APPLE_FN);
             }
-            return false;  // Skip all further processing of this key
+            return false; break;  // Skip all further processing of this key
         case MAGIC_HOST_NKRO:
-        case MAGIC_UNHOST_NKRO: return false;  // discard these keys
+        case MAGIC_UNHOST_NKRO: return false; break;  // discard these keys
         #endif  // APPLE_FN_ENABLE
 
-        case KC_LOCK_AND_SLEEP: return __lock_and_sleep(record);
-        case KC_CLEAR_EEPROM: return __eeprom_clear(record);
-        case QK_BOOT: return __keyboard_boot(record);
-        case KC_VERSION: return __print_version(record);
+        case KC_LOCK_AND_SLEEP: return __lock_and_sleep(record); break;
+        case KC_CLEAR_EEPROM: return __eeprom_clear(record); break;
+        case QK_BOOT: return __keyboard_boot(record); break;
+        case KC_VERSION: return __print_version(record); break;
 
-        default:
-            return true;
+        default: break;
     }
+
+    return true;
 }
 
 #ifdef RGB_MATRIX_ENABLE
