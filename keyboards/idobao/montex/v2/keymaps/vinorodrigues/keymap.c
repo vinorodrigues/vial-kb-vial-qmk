@@ -137,27 +137,24 @@ void eeconfig_init_user(void) {
     eeconfig_init_id27();
 }
 
-// bool rgb_matrix_indicators_user(void) {
-//     return rgb_matrix_indicators_id27();
-// }
+#ifdef RGB_MATRIX_ENABLE
+
+/*
+ * RGB Stuff
+ */
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     return rgb_matrix_indicators_advanced_id27(led_min, led_max);
 }
 
+#endif
+
+/*
+ * Process Record
+ */
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_idobao(keycode, record)) { return false; }
     if (!process_record_id27(keycode, record)) { return false; }
-
-    // #ifdef APPLE_FN_ENABLE
-    // switch (keycode) {
-    //     case MAGIC_TOGGLE_NKRO:
-    //     case KC_APPLE_FN_KEY:   return idobao_register_code(record, KC_APPLE_FN); break;
-    //     case MAGIC_HOST_NKRO:
-    //     case MAGIC_UNHOST_NKRO: return false; break;  // discard these keys
-    //     default: break;
-    // }
-    // #endif  // APPLE_FN_ENABLE
-
-    return true;  /* Process all other keycodes normally */
+    return true;  // Process all other keycodes normally
 }

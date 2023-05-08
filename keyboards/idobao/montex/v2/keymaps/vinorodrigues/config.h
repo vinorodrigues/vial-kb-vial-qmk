@@ -10,5 +10,5 @@
 
 #define DYNAMIC_KEYMAP_LAYER_COUNT 6
 
-#define ID27_NUM_LOCK_KEY_INDEX 6  // position of Num Lock key
+#define NUM_LOCK_LED_INDEX 6  // position of Num Lock key
 #define ID27_EMULATED_NUM_LOCK_LAYER 1
