@@ -61,14 +61,13 @@ void housekeeping_task_idobao(void);
 bool process_record_idobao(uint16_t keycode, keyrecord_t *record);
 
 #ifdef RGB_MATRIX_ENABLE
-
 uint8_t light_brightness_get(void);
-bool rgb_matrix_indicators_advanced_idobao(uint8_t led_min, uint8_t led_max);
-
-#if defined(CAPS_LOCK_LED_INDEX) || defined(NUM_LOCK_LED_INDEX) || defined(SCROLL_LOCK_LED_INDEX)
-
-void rgb_matrix_indicators_idobao(void);
-bool led_update_idobao(led_t led_state);
-
-#endif  // CAPS_LOCK_LED_INDEX | NUM_LOCK_LED_INDEX | SCROLL_LOCK_LED_INDEX
 #endif  // RGB_MATRIX_ENABLE
+
+// #if defined(RGB_MATRIX_ENABLE) && (defined(CAPS_LOCK_LED_INDEX) || defined(NUM_LOCK_LED_INDEX) || defined(SCROLL_LOCK_LED_INDEX))
+
+// bool rgb_matrix_indicators_idobao(void);
+// void rgb_matrix_indicators_none_idobao(void);
+// bool led_update_idobao(led_t led_state);
+
+// #endif  // CAPS_LOCK_LED_INDEX | NUM_LOCK_LED_INDEX | SCROLL_LOCK_LED_INDEX
