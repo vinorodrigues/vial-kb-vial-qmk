@@ -72,15 +72,9 @@ static bool __eeprom_clear(keyrecord_t *record) {
     return false;
 }
 
-void __do_lock_and_sleep(void) {
-    send_string(SS_LCTL(SS_LGUI("q")) SS_DELAY(225) SS_TAP(X_ESC));
-}
-
 static bool __lock_and_sleep(keyrecord_t *record) {
     if ((get_mods() & MOD_MASK_CSAG)) {
-        if (record->event.pressed) {
-            __do_lock_and_sleep();
-        }
+        return idobao_register_code_2(record, KC_LGUI, KC_L);
     } else {
         if (record->event.pressed) {
             timer_macos_lock_buffer = sync_timer_read32();
@@ -96,7 +90,7 @@ static bool __lock_and_sleep(keyrecord_t *record) {
 void housekeeping_task_idobao(void) {
     if (macos_lock_enabled && (sync_timer_elapsed32(timer_macos_lock_buffer) > MACOS_LOCK_DELAY)) {
         macos_lock_enabled = false;
-        __do_lock_and_sleep();
+        SEND_STRING_DELAY( SS_LGUI("l"), 0 );
     }
 }
 
