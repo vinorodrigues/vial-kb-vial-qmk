@@ -54,7 +54,7 @@ bool idobao_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data2,
     return false;  // Skip all further processing of this key
 }
 
-static bool __print_version(keyrecord_t *record) {
+bool idobao_print_version(keyrecord_t *record) {
     if (!get_mods()) {
         if (!record->event.pressed) {
                 SEND_STRING(QMK_KEYBOARD ":" QMK_KEYMAP " (v" QMK_VERSION ")");
@@ -67,7 +67,7 @@ static bool __eeprom_clear(keyrecord_t *record) {
     if (record->event.pressed) {
         eeconfig_init_quantum();
         soft_reset_keyboard();
-        wait_ms(10);  // give it time
+        wait_ms(TAPPING_TERM);  // give it time
     }
     return false;
 }
@@ -110,7 +110,7 @@ bool process_record_idobao(uint16_t keycode, keyrecord_t *record) {
 
         // general
         case KC_CLEAR_EEPROM:    return __eeprom_clear(record); break;
-        case KC_VERSION:         return __print_version(record); break;
+        case KC_VERSION:         return idobao_print_version(record); break;
 
         default: break;
     }

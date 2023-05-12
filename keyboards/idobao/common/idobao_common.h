@@ -57,6 +57,8 @@ bool idobao_register_code(keyrecord_t *record, uint16_t data);
 bool idobao_register_code_2(keyrecord_t *record, uint16_t data1, uint16_t data2);
 bool idobao_register_code_3(keyrecord_t *record, uint16_t data1, uint16_t data2, uint16_t data3);
 
+bool idobao_print_version(keyrecord_t *record);
+
 void housekeeping_task_idobao(void);
 bool process_record_idobao(uint16_t keycode, keyrecord_t *record);
 
