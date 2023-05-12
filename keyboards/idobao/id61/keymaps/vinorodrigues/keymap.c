@@ -97,16 +97,14 @@ void eeconfig_init_user(void) {
     eeconfig_init_id61();
 }
 
-#ifdef RGB_MATRIX_ENABLE
-
 /*
  * RGB Stuff
  */
 
+#ifdef RGB_MATRIX_ENABLE
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     return rgb_matrix_indicators_advanced_id61(led_min, led_max);
 }
-
 #endif
 
 /*

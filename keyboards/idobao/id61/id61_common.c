@@ -25,6 +25,7 @@ typedef union {
     };
 } user_config_t;
 
+#ifdef RGB_MATRIX_ENABLE
 const uint8_t g_led_config_new_flags[RGB_MATRIX_LED_COUNT] = {
     0x01, 0x01, 0x01, 0x01,                   0x04,                   0x01, 0x01, 0x01,
     0x01,       0x04, 0x04, 0x04, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x01,
@@ -35,6 +36,7 @@ const uint8_t g_led_config_new_flags[RGB_MATRIX_LED_COUNT] = {
     , 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02
     #endif
 };
+#endif
 
 user_config_t user_config = {.raw = 0};
 uint32_t _keycode_raised = 0;
@@ -43,10 +45,12 @@ bool _delete_key_raised = false;
 bool led_on_lyr = false;
 #endif
 
+#ifdef RGB_MATRIX_ENABLE
 void keyboard_pre_init_kb(void) {
     // override `info.json` flags with new values
     memcpy(g_led_config.flags, g_led_config_new_flags, RGB_MATRIX_LED_COUNT);
 }
+#endif
 
 bool get_keycode_raised(uint8_t n) {
     return _keycode_raised & (1 << n);
@@ -157,7 +161,7 @@ static void id61_set_rgb_mode(void) {
     }
 }
 
-#endif  // RGB_MATRIX ENABLE
+#endif  // RGB_MATRIX_ENABLE
 
 void keyboard_post_init_id61(void) {
     user_config.raw = eeconfig_read_kb();  // read config from EEPROM
