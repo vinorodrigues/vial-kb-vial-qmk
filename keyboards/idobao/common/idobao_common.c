@@ -145,11 +145,11 @@ uint8_t light_brightness_get(void) {
     return value;
 }
 
-void shutdown_user(void) {
-    uint8_t v = light_brightness_get();
-    rgb_matrix_set_color_all(v, 0, 0);
-    rgb_matrix_update_pwm_buffers();
-}
+// void shutdown_user(void) {
+//     uint8_t v = light_brightness_get();
+//     rgb_matrix_set_color_all(v, 0, 0);
+//     rgb_matrix_update_pwm_buffers();
+// }
 
 #endif  // RGB_MATRIX_ENABLE
 
