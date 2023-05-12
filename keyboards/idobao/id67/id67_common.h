@@ -31,7 +31,10 @@ enum id67_custom_keycodes {
 
 void keyboard_post_init_id67(void);
 void eeconfig_init_id67(void);
+
+#ifdef RGB_MATRIX_ENABLE
 // bool rgb_matrix_indicators_id67(void);
 bool rgb_matrix_indicators_advanced_id67(uint8_t led_min, uint8_t led_max);
+#endif
 
 bool process_record_id67(uint16_t keycode, keyrecord_t *record);

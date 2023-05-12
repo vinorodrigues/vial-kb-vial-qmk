@@ -105,16 +105,14 @@ void eeconfig_init_user(void) {
     eeconfig_init_id67();
 }
 
-#ifdef RGB_MATRIX_ENABLE
-
 /*
  * RGB Stuff
  */
 
+#ifdef RGB_MATRIX_ENABLE
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     return rgb_matrix_indicators_advanced_id67(led_min, led_max);
 }
-
 #endif
 
 /*
@@ -124,5 +122,25 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_idobao(keycode, record)) { return false; }
     if (!process_record_id67(keycode, record)) { return false; }
+
+    #ifdef RGB_MATRIX_ENABLE
+    switch (keycode) {
+        case QK_BOOT:
+            if (record->event.pressed) {
+                rgb_matrix_driver.set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, 0, 0);  // All red
+                rgb_matrix_driver.flush();
+            }
+            return true;
+
+        case KC_CLEAR_EEPROM:
+        case EE_CLR:
+            if (record->event.pressed) {
+                rgb_matrix_driver.set_color_all(RGB_MATRIX_MAXIMUM_BRIGHTNESS, (RGB_MATRIX_MAXIMUM_BRIGHTNESS * 0.65), 0);  // All orange
+                rgb_matrix_driver.flush();
+            }
+            return true;
+    }
+    #endif  // RGB_MATRIX_ENABLE
+
     return true;  // Process all other keycodes normally
 }

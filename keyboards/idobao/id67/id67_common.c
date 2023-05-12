@@ -7,9 +7,9 @@
 #include "id67_common.h"
 
 #ifdef RGB_MATRIX_ENABLE
-
 #define LED_FLAG_ALPHA_KEY 0x10  // Alpha keys (for Caps Lock)
 #define LED_FLAG_LAYER_IND 0x20  // Layer indicator
+#endif
 
 typedef union {
     uint8_t raw;
@@ -22,9 +22,7 @@ typedef union {
     };
 } user_config_t;
 
-user_config_t user_config = {.raw = 0};
-bool led_on_lyr = false;
-
+#ifdef RGB_MATRIX_ENABLE
 const uint8_t g_led_config_new_flags[RGB_MATRIX_LED_COUNT] = {
     // Extended LED Index to Flag
     // ** Remember: on ID67 this is in reverse order
@@ -36,14 +34,20 @@ const uint8_t g_led_config_new_flags[RGB_MATRIX_LED_COUNT] = {
     #ifndef ID67_DISABLE_UNDERGLOW
     , 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02
     #endif
-    };
+};
+#endif
+
+user_config_t user_config = {.raw = 0};
+bool led_on_lyr = false;
+
+#ifdef RGB_MATRIX_ENABLE
 
 void keyboard_pre_init_kb(void) {
     // override `info.json` flags with new values
     memcpy(g_led_config.flags, g_led_config_new_flags, RGB_MATRIX_LED_COUNT);
 }
 
-static void id67_update_rgb_mode(void) {
+static void id67_set_rgb_mode(void) {
     uint8_t flags = LED_FLAG_ALL;
 
     if (user_config.rgb_disable_perkey
@@ -70,74 +74,26 @@ static void id67_update_rgb_mode(void) {
         rgb_matrix_set_flags(flags);
         rgb_matrix_enable_noeeprom();
     }
-
-    eeconfig_update_kb(user_config.raw);  // write back to EEPROM
 }
 
-static void id67_get_rgb_mode(void) {
+#endif  // RGB_MATRIX_ENABLE
+
+void keyboard_post_init_id67(void) {
     user_config.raw = eeconfig_read_kb();  // read config from EEPROM
-    id67_update_rgb_mode();
+    #ifdef RGB_MATRIX_ENABLE
+    id67_set_rgb_mode();
+    #endif  // RGB_MATRIX_ENABLE
 }
 
-bool id67_toggle_rgb(keyrecord_t *record) {
-    /* roll through the LED modes
-     * |    Level   | Per-key | Underglow |
-     * |------------|---------|-----------|
-     * | 0 (defalt) |   on    |    on     |
-     * |     1      |   OFF   |    on     |
-     * |     2      |   on    |    OFF    |
-     * |     3      |   OFF   |    OFF    |
-     */
-    if (record->event.pressed) {
-        if ( (!user_config.rgb_disable_perkey)
-            #ifndef ID67_DISABLE_UNDERGLOW
-            && (!user_config.rgb_disable_underglow)
-            #endif  // ID67_DISABLE_UNDERGLOW
-            ) {
-            user_config.rgb_disable_perkey = 1;
-        #ifndef ID67_DISABLE_UNDERGLOW
-        } else if ( user_config.rgb_disable_perkey && (!user_config.rgb_disable_underglow) ) {
-            user_config.rgb_disable_perkey = 0;
-            user_config.rgb_disable_underglow = 1;
-        } else if ( (!user_config.rgb_disable_perkey) && user_config.rgb_disable_underglow ) {
-            user_config.rgb_disable_perkey = 1;
-        #endif  // ID67_DISABLE_UNDERGLOW
-        } else {
-            user_config.rgb_disable_perkey = 0;
-            #ifndef ID67_DISABLE_UNDERGLOW
-            user_config.rgb_disable_underglow = 0;
-            #endif  // ID67_DISABLE_UNDERGLOW
-        }
-        id67_update_rgb_mode();
-    }
-    return false;
+void eeconfig_init_id67(void) {
+    // EEPROM is getting reset!
+    #ifdef RGB_MATRIX_ENABLE
+    user_config.raw = 0;
+    id67_set_rgb_mode();
+    #endif  // RGB_MATRIX_ENABLE
 }
 
-static bool id67_toggle_caps_lock(keyrecord_t *record) {
-    if (record->event.pressed) {
-        user_config.rgb_disable_capslock ^= 1;
-        eeconfig_update_kb(user_config.raw);  // write back to EEPROM
-    }
-    return false;
-}
-
-static bool id67_toggle_per_key(keyrecord_t *record) {
-    if (record->event.pressed) {
-        user_config.rgb_disable_perkey ^= 1;
-        id67_update_rgb_mode();
-    }
-    return false;
-}
-
-#ifndef ID67_DISABLE_UNDERGLOW
-static bool id67_toggle_underglow(keyrecord_t *record) {
-    if (record->event.pressed) {
-        user_config.rgb_disable_underglow ^= 1;
-        id67_update_rgb_mode();
-    }
-    return false;
-}
-#endif  // ID67_DISABLE_UNDERGLOW
+#ifdef RGB_MATRIX_ENABLE
 
 bool rgb_matrix_indicators_advanced_id67(uint8_t led_min, uint8_t led_max) {
     uint8_t v = rgb_matrix_get_val();
@@ -178,21 +134,70 @@ bool rgb_matrix_indicators_advanced_id67(uint8_t led_min, uint8_t led_max) {
     return true;
 }
 
+bool id67_toggle_rgb(keyrecord_t *record) {
+    /* roll through the LED modes
+     * |    Level   | Per-key | Underglow |
+     * |------------|---------|-----------|
+     * | 0 (defalt) |   on    |    on     |
+     * |     1      |   OFF   |    on     |
+     * |     2      |   on    |    OFF    |
+     * |     3      |   OFF   |    OFF    |
+     */
+    if (record->event.pressed) {
+        if ( (!user_config.rgb_disable_perkey)
+            #ifndef ID67_DISABLE_UNDERGLOW
+            && (!user_config.rgb_disable_underglow)
+            #endif  // ID67_DISABLE_UNDERGLOW
+            ) {
+            user_config.rgb_disable_perkey = 1;
+        #ifndef ID67_DISABLE_UNDERGLOW
+        } else if ( user_config.rgb_disable_perkey && (!user_config.rgb_disable_underglow) ) {
+            user_config.rgb_disable_perkey = 0;
+            user_config.rgb_disable_underglow = 1;
+        } else if ( (!user_config.rgb_disable_perkey) && user_config.rgb_disable_underglow ) {
+            user_config.rgb_disable_perkey = 1;
+        #endif  // ID67_DISABLE_UNDERGLOW
+        } else {
+            user_config.rgb_disable_perkey = 0;
+            #ifndef ID67_DISABLE_UNDERGLOW
+            user_config.rgb_disable_underglow = 0;
+            #endif  // ID67_DISABLE_UNDERGLOW
+        }
+        eeconfig_update_kb(user_config.raw);  // write back to EEPROM
+        id67_set_rgb_mode();
+    }
+    return false;
+}
+
+static bool id67_toggle_caps_lock(keyrecord_t *record) {
+    if (record->event.pressed) {
+        user_config.rgb_disable_capslock ^= 1;
+        eeconfig_update_kb(user_config.raw);  // write back to EEPROM
+    }
+    return false;
+}
+
+static bool id67_toggle_per_key(keyrecord_t *record) {
+    if (record->event.pressed) {
+        user_config.rgb_disable_perkey ^= 1;
+        eeconfig_update_kb(user_config.raw);  // write back to EEPROM
+        id67_set_rgb_mode();
+    }
+    return false;
+}
+
+#ifndef ID67_DISABLE_UNDERGLOW
+static bool id67_toggle_underglow(keyrecord_t *record) {
+    if (record->event.pressed) {
+        user_config.rgb_disable_underglow ^= 1;
+        eeconfig_update_kb(user_config.raw);  // write back to EEPROM
+        id67_set_rgb_mode();
+    }
+    return false;
+}
+#endif  // ID67_DISABLE_UNDERGLOW
+
 #endif  // RGB_MATRIX_ENABLE
-
-void keyboard_post_init_id67(void) {
-    #ifdef RGB_MATRIX_ENABLE
-    id67_get_rgb_mode();
-    #endif  // RGB_MATRIX_ENABLE
-}
-
-void eeconfig_init_id67(void) {
-    // EEPROM is getting reset!
-    #ifdef RGB_MATRIX_ENABLE
-    user_config.raw = 0;
-    id67_update_rgb_mode();
-    #endif  // RGB_MATRIX_ENABLE
-}
 
 bool process_record_id67(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -203,15 +208,10 @@ bool process_record_id67(uint16_t keycode, keyrecord_t *record) {
         #ifndef ID67_DISABLE_UNDERGLOW
         case RGB_TOGGLE_UNDERGLOW: id67_toggle_underglow(record); break;
         #endif  // ID67_DISABLE_UNDERGLOW
-
-        case EE_CLR:
-            if (!record->event.pressed) {  // on release
-                id67_get_rgb_mode();
-            }
-            return true;  // let this one pass on
         #endif  // RGB_MATRIX_ENABLE
 
         default: break;
     }
+
     return true;
 }
